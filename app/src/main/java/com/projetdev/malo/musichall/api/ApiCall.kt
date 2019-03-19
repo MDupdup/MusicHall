@@ -9,7 +9,7 @@ import org.json.JSONObject
 
 import java.io.IOException
 import java.util.ArrayList
-
+import java.util.concurrent.CountDownLatch
 class ApiCall(private val url: String) {
 
     fun searchForArtists(value: String): ArrayList<Artist> {
@@ -23,6 +23,7 @@ class ApiCall(private val url: String) {
             .url(this.url + "/search/artist/" + value)
             .build()
 
+        var countDownLatch = CountDownLatch(1)
         getClient()?.newCall(req)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERR", "Excuse me what the fuck")
@@ -47,6 +48,7 @@ class ApiCall(private val url: String) {
                                 )
                             )
                         }
+                        countDownLatch.countDown()
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -55,6 +57,7 @@ class ApiCall(private val url: String) {
             }
         })
 
+        countDownLatch.await()
         return artistList
     }
 
@@ -71,3 +74,4 @@ class ApiCall(private val url: String) {
         }
     }
 }
+
