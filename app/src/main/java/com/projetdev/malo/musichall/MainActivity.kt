@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         var api = ApiCall("http://10.44.0.191:3333")
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = Adapter(api.searchForArtists("Muse"))
+        viewAdapter = Adapter(this, api.searchForArtists("Muse"))
 
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(true)
