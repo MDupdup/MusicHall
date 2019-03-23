@@ -5,6 +5,7 @@ public class Artist {
     private int id;
     private String name;
     private String uri;
+    private String cover;
     private String description;
     private Disc[] discography;
     private String[] picturesUris;
@@ -14,6 +15,13 @@ public class Artist {
         this.id = id;
         this.name = name;
         this.uri = uri;
+    }
+
+    public Artist(int id, String name, String uri, String cover) {
+        this.id = id;
+        this.name = name;
+        this.uri = uri;
+        this.cover = cover;
     }
 
     public Artist(int id, String name, String uri, String description, Disc[] discography, String[] picturesUris, Member[] members) {

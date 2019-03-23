@@ -29,5 +29,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+
+        Log.i("MDR", api.getRelease(645846)?.name)
     }
 }
