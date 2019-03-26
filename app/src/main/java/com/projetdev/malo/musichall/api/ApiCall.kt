@@ -10,14 +10,13 @@ import org.json.JSONException
 import org.json.JSONObject
 
 import java.io.IOException
+import java.lang.Integer.parseInt
 import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
 
 class ApiCall(private val url: String) {
 
-
     fun getRelease(id: Int): Disc? {
-
         var disc: Disc? = null
 
         val req = Request.Builder()
@@ -154,7 +153,7 @@ class ApiCall(private val url: String) {
         return discList
     }*/
 
-    fun searchForArtists(value: String): ArrayList<Artist> {
+    fun searchForArtists(value: String?): ArrayList<Artist> {
 
         val artistList = ArrayList<Artist>()
 
@@ -165,7 +164,7 @@ class ApiCall(private val url: String) {
             .url(this.url + "/search/artist/" + value)
             .build()
 
-        var countDownLatch = CountDownLatch(1)
+        val countDownLatch = CountDownLatch(1)
         getClient()?.newCall(req)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERR", "Excuse me what the fuck")
@@ -205,9 +204,10 @@ class ApiCall(private val url: String) {
     }
 
     private fun timeToInt(time: String): Int {
+        val splittedTime = time.split(":")
+        val finalTime = parseInt(splittedTime[0])*60 + parseInt(splittedTime[1])
 
-
-        return 0
+        return finalTime
     }
 
     private fun getArrayFromJson(jsonArray: JSONArray): List<String>? {
@@ -219,15 +219,10 @@ class ApiCall(private val url: String) {
 
     companion object {
 
-        private var client: OkHttpClient? = null
-
+        private var client: OkHttpClient? = OkHttpClient()
 
         private fun getClient(): OkHttpClient? {
-            if (client == null) {
-                client = OkHttpClient()
-            }
             return client
         }
     }
 }
-

@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.list_row.view.*
 
 class Adapter(val items : ArrayList<Artist>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
-    // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return items.size
     }
@@ -21,13 +20,11 @@ class Adapter(val items : ArrayList<Artist>, val context: Context) : RecyclerVie
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_row, parent, false))
     }
 
-    // Binds each animal in the ArrayList to a view
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.tvAnimalType?.text = items.get(position).name
+        holder?.textView?.text = items.get(position).name
     }
 }
 
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-    // Holds the TextView that will add each animal to
-    val tvAnimalType = view.mdr
+    val textView = view.mdr
 }

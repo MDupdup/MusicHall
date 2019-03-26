@@ -7,6 +7,6 @@
         android:text="mapdij"
         android:id="@+id/mdr"
         android:layout_width="match_parent"
-        android:layout_height="125dp" />
+        android:layout_height="125dp"/>
 
 </LinearLayout>
