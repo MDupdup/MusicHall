@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/search_recyclerview_item_height"
-    tools:ignore="UseCompoundDrawables">
+    tools:ignore="UseCompoundDrawables"
+    android:id="@+id/search_row">
 
     <ImageView
         android:id="@+id/search_imageview"

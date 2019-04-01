@@ -4,21 +4,17 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.constraint.solver.widgets.Helper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.support.v7.widget.SearchView
 import android.view.MotionEvent
-import android.widget.AdapterView
 import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.api.ApiCall
-import com.projetdev.malo.musichall.models.Result
 import com.projetdev.malo.musichall.recyclerview.MainAdapter
 import java.util.*
 import java.util.concurrent.CountDownLatch
-import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
@@ -42,7 +38,7 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val api = ApiCall("http://192.168.43.204:3333")
+        val api = ApiCall("http://192.168.1.11:3333")
 
         menuFab = findViewById(R.id.menu_fab)
 
@@ -57,7 +53,6 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
         }
 
 
-
         val searchBar = findViewById<SearchView>(R.id.searchAutoComplete)
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -69,10 +64,10 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
             override fun onQueryTextChange(newText: String?): Boolean {
                 Log.e("MDR", newText)
 
-                if(!initTimer) timer.cancel()
+                if (!initTimer) timer.cancel()
 
                 timer = Timer("SearchApi", false).schedule(500) {
-                    if(!initTimer) initTimer = false
+                    if (!initTimer) initTimer = false
 
                     val queryList = api.searchForArtists(newText?.replace(" ", "%20"))
                     handler.post(Runnable {
@@ -93,8 +88,6 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
     }
 
     override fun onInterceptTouchEvent(rv: RecyclerView?, e: MotionEvent?): Boolean {
-        rv?.adapter.
-        System.out.println("MDRRRRRRR")
 
         return false
     }
@@ -102,7 +95,6 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 
 
     fun getToCollection(view: View) {

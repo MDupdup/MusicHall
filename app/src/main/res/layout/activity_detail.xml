@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <ImageView android:layout_width="406dp"
+               android:layout_height="@dimen/detail_image_height"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               android:contentDescription="@string/detail_image_content_desc"/>
+
+    <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="172dp"
+            android:src="@drawable/ic_star_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="#F50057"
+            fab:fab_colorPressed="#E8004A"
+            fab:fab_colorRipple="#C20024"
+            fab:fab_shadowColor="#000"
+            fab:fab_elevationCompat="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

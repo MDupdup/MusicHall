@@ -102,6 +102,45 @@ class ApiCall(private val url: String) {
         return disc
     }
 
+    fun getArtist(id: Int): Artist? {
+        var artist = null
+
+        val req = Request.Builder()
+            .header("Content-Type", "application/json")
+            .url(this.url + "/artist/" + id)
+            .build()
+
+        getClient()?.newCall(req)?.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("ERR", "Excuse me what the fuck")
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    throw IOException("Unexpected response! Code $response")
+                } else {
+                    val json = JSONObject(response.body()!!.string())
+
+
+
+                    artist = Artist(
+                        json.getInt("id"),
+                        json.getString("name"),
+                        json.getString("resource_url"),
+                        json.getString(""),
+                        json.getString("profile"),
+                        json.getString()
+
+                    )
+
+                }
+            }
+        })
+
+        return artist
+    }
+
 /*    fun searchForReleases(value: String): ArrayList<Disc> {
 
         val discList = ArrayList<Disc>()
