@@ -4,6 +4,7 @@ import android.util.Log
 import com.projetdev.malo.musichall.models.Artist
 import com.projetdev.malo.musichall.models.Disc
 import com.projetdev.malo.musichall.models.Track
+import com.projetdev.malo.musichall.models.Result
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -153,11 +154,13 @@ class ApiCall(private val url: String) {
         return discList
     }*/
 
-    fun searchForArtists(value: String?): ArrayList<Artist> {
+    fun searchForArtists(value: String?): ArrayList<Result> {
 
-        val artistList = ArrayList<Artist>()
+        val artistList = ArrayList<Result>()
 
         Log.e("MDR", this.url + "/search/artist/" + value)
+
+        if(value == "" || value == null) return artistList
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
@@ -180,12 +183,10 @@ class ApiCall(private val url: String) {
                         val json = JSONArray(response.body()!!.string())
                         for (i in 0 until json.length()) {
                             val jsonObject = json.getJSONObject(i)
-                            Log.i("LOL", jsonObject.getString("title"))
                             artistList.add(
                                 Artist(
                                     jsonObject.getInt("id"),
                                     jsonObject.getString("title"),
-                                    jsonObject.getString("uri"),
                                     jsonObject.getString("cover_image")
                                 )
                             )

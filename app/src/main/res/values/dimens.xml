@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_size">100dp</dimen>
+    <dimen name="image_margin">10dp</dimen>
+    <dimen name="search_recyclerview_item_height">125dp</dimen>
+    <dimen name="search_title_size">20sp</dimen>
+</resources>
