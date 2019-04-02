@@ -1,5 +1,7 @@
 package com.projetdev.malo.musichall.models;
 
+import java.util.ArrayList;
+
 public class Artist extends Result {
 
     private int id;
@@ -7,9 +9,8 @@ public class Artist extends Result {
     private String thumbnail;
     private String uri;
     private String description;
-    private Disc[] discography;
-    private String[] picturesUris;
-    private Member[] members;
+    private ArrayList<Disc> discography;
+    private ArrayList<Member> members;
 
     public Artist(int id, String name, String thumbnail) {
         super(id, name, thumbnail);
@@ -26,7 +27,7 @@ public class Artist extends Result {
         this.thumbnail = thumbnail;
     }
 
-    public Artist(int id, String name, String uri, String thumbnail, String description, Disc[] discography, String[] picturesUris, Member[] members) {
+    public Artist(int id, String name, String uri, String thumbnail, String description, ArrayList<Disc> discography, ArrayList<Member> members) {
         super(id, name, thumbnail);
         this.id = id;
         this.name = name;
@@ -34,7 +35,6 @@ public class Artist extends Result {
         this.uri = uri;
         this.description = description;
         this.discography = discography;
-        this.picturesUris = picturesUris;
         this.members = members;
     }
 
@@ -58,15 +58,11 @@ public class Artist extends Result {
         return description;
     }
 
-    public Disc[] getDiscography() {
+    public ArrayList<Disc> getDiscography() {
         return discography;
     }
 
-    public String[] getPicturesUris() {
-        return picturesUris;
-    }
-
-    public Member[] getMembers() {
+    public ArrayList<Member> getMembers() {
         return members;
     }
 }

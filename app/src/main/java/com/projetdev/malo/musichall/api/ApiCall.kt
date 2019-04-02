@@ -1,10 +1,7 @@
 package com.projetdev.malo.musichall.api
 
 import android.util.Log
-import com.projetdev.malo.musichall.models.Artist
-import com.projetdev.malo.musichall.models.Disc
-import com.projetdev.malo.musichall.models.Track
-import com.projetdev.malo.musichall.models.Result
+import com.projetdev.malo.musichall.models.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -103,7 +100,7 @@ class ApiCall(private val url: String) {
     }
 
     fun getArtist(id: Int): Artist? {
-        var artist = null
+        var artist: Artist? = null
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
@@ -122,18 +119,37 @@ class ApiCall(private val url: String) {
                 } else {
                     val json = JSONObject(response.body()!!.string())
 
+                    val discography = ArrayList<Disc>()
+                    val jsonDiscs = json.getJSONObject("ReleasesMin")
+                    for (i in 0 until jsonDiscs.length()) {
+                        discography.add(Disc(
+                            jsonDiscs.getInt("ID"),
+                            jsonDiscs.getString("Title"),
+                            jsonDiscs.getInt("Year"),
+                            jsonDiscs.getString("Thumb")
+                        ))
+                    }
 
+                    val members = ArrayList<Member>()
+                    val jsonMembers = json.getJSONObject("Members")
+                    for (i in 0 until jsonDiscs.length()) {
+                        members.add(Member(
+                            jsonMembers.getInt("id"),
+                            jsonMembers.getString("name"),
+                            jsonMembers.getString("resource_url"),
+                            jsonMembers.getBoolean("active")
+                        ))
+                    }
 
                     artist = Artist(
                         json.getInt("id"),
                         json.getString("name"),
                         json.getString("resource_url"),
-                        json.getString(""),
+                        "",
                         json.getString("profile"),
-                        json.getString()
-
+                        discography,
+                        members
                     )
-
                 }
             }
         })
