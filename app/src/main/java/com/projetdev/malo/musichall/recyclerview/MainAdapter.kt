@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.projetdev.malo.musichall.Activitutils
-import com.projetdev.malo.musichall.DetailActivity
+import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.models.Result
 import com.squareup.picasso.Picasso
@@ -40,8 +40,9 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
 
             holder.row.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(v: View?) {
-                    val intent = Intent(context, DetailActivity::class.java)
+                    val intent = Intent(context, ArtistDetailActivity::class.java)
                     intent.putExtra("id", items[position].id)
+                    intent.putExtra("thumb", items[position].thumbnail)
 
                     context.startActivity(intent)
                 }

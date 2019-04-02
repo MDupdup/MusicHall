@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
 
         menuFab = findViewById(R.id.menu_fab)
 
-        myAdapter = MainAdapter(api.searchForArtists(""), this@MainActivity)
+        myAdapter = MainAdapter(api.searchForArtists(), this@MainActivity)
 
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {

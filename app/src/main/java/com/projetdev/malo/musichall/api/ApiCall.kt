@@ -107,6 +107,7 @@ class ApiCall(private val url: String) {
             .url(this.url + "/artist/" + id)
             .build()
 
+        val countDownLatch = CountDownLatch(1)
         getClient()?.newCall(req)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERR", "Excuse me what the fuck")
@@ -120,8 +121,10 @@ class ApiCall(private val url: String) {
                     val json = JSONObject(response.body()!!.string())
 
                     val discography = ArrayList<Disc>()
-                    val jsonDiscs = json.getJSONObject("ReleasesMin")
-                    for (i in 0 until jsonDiscs.length()) {
+                    val jsonArrayDiscs = json.getJSONArray("ReleasesMin")
+                    for (i in 0 until jsonArrayDiscs.length()) {
+                        val jsonDiscs = jsonArrayDiscs.getJSONObject(i)
+
                         discography.add(Disc(
                             jsonDiscs.getInt("ID"),
                             jsonDiscs.getString("Title"),
@@ -131,8 +134,10 @@ class ApiCall(private val url: String) {
                     }
 
                     val members = ArrayList<Member>()
-                    val jsonMembers = json.getJSONObject("Members")
-                    for (i in 0 until jsonDiscs.length()) {
+                    val jsonArrayMembers = json.getJSONArray("Members")
+                    for (i in 0 until jsonArrayMembers.length()) {
+                        val jsonMembers = jsonArrayMembers.getJSONObject(i)
+
                         members.add(Member(
                             jsonMembers.getInt("id"),
                             jsonMembers.getString("name"),
@@ -144,16 +149,18 @@ class ApiCall(private val url: String) {
                     artist = Artist(
                         json.getInt("id"),
                         json.getString("name"),
-                        json.getString("resource_url"),
+                        "",
                         "",
                         json.getString("profile"),
                         discography,
                         members
                     )
+
+                    countDownLatch.countDown()
                 }
             }
         })
-
+        countDownLatch.await()
         return artist
     }
 
@@ -209,7 +216,7 @@ class ApiCall(private val url: String) {
         return discList
     }*/
 
-    fun searchForArtists(value: String?): ArrayList<Result> {
+    fun searchForArtists(value: String? = ""): ArrayList<Result> {
 
         val artistList = ArrayList<Result>()
 
