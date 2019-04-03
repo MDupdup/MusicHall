@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/search_recyclerview_item_height"
-    tools:ignore="UseCompoundDrawables"
-    android:id="@+id/search_row">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/search_recyclerview_item_height"
+              tools:ignore="UseCompoundDrawables"
+              android:id="@+id/search_row"
+
+              android:elevation="3dp"
+              android:layout_margin="4dp"
+              android:background="@drawable/card">
 
     <ImageView
-        android:id="@+id/search_imageview"
-        android:layout_width="@dimen/image_size"
-        android:layout_height="@dimen/image_size"
-        android:layout_marginStart="@dimen/image_margin"
-        android:layout_marginEnd="@dimen/image_margin"
-        android:layout_marginTop="@dimen/image_margin"
-        android:layout_marginBottom="@dimen/image_margin"
-        android:contentDescription="@string/image_content_desc"/>
+            android:id="@+id/search_imageview"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:layout_marginStart="@dimen/image_margin"
+            android:layout_marginEnd="@dimen/image_margin"
+            android:layout_marginTop="@dimen/image_margin"
+            android:layout_marginBottom="@dimen/image_margin"
+            android:contentDescription="@string/image_content_desc"/>
 
     <TextView
-        android:id="@+id/search_textview_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
+            android:id="@+id/search_textview_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
 
-        android:text="@string/search_textview_value"
-        android:textSize="@dimen/search_title_size"
-        android:textColor="@android:color/black"/>
+            android:text="@string/search_textview_value"
+            android:textSize="@dimen/search_title_size"
+            android:textColor="@android:color/black"/>
 
 </LinearLayout>

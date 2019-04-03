@@ -52,8 +52,9 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
             addOnItemTouchListener(this@MainActivity)
         }
 
-
         val searchBar = findViewById<SearchView>(R.id.searchAutoComplete)
+        searchBar.isFocusedByDefault = false
+
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val queryList = api.searchForArtists(query)
@@ -66,16 +67,16 @@ class MainActivity : AppCompatActivity(), RecyclerView.OnItemTouchListener {
 
                 if (!initTimer) timer.cancel()
 
-                timer = Timer("SearchApi", false).schedule(500) {
-                    if (!initTimer) initTimer = false
+                timer = Timer("SearchApi", false).schedule(250) {
+                    if (initTimer) {
+                        initTimer = false
+                    }
 
                     val queryList = api.searchForArtists(newText?.replace(" ", "%20"))
-                    handler.post(Runnable {
+                    handler.post {
                         myAdapter.refreshList(queryList)
-                    })
+                    }
                 }
-
-
                 return true
             }
         })
