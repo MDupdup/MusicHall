@@ -3,4 +3,7 @@
     <string name="image_content_desc">Cover image of the item</string>
     <string name="search_textview_value">This is a title!</string>
     <string name="detail_image_content_desc">Cover Image</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

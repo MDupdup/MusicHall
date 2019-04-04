@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.recyclerview
+package com.projetdev.malo.musichall.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -12,7 +12,7 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.models.Result
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.list_row.view.*
+import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
 import java.util.ArrayList
 
@@ -26,7 +26,7 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-            return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_row, parent, false))
+            return ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_main_rv, parent, false))
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
