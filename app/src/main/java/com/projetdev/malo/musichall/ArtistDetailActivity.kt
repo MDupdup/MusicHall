@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
 import com.squareup.picasso.Picasso
 

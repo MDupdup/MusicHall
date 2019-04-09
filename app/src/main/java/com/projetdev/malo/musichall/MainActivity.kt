@@ -1,6 +1,5 @@
 package com.projetdev.malo.musichall
 
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,14 +10,14 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.support.v7.widget.SearchView
-import android.view.animation.LinearInterpolator
-import android.widget.Button
 import android.widget.ImageView
 import com.github.clans.fab.FloatingActionMenu
+import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
+import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
+import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.MainAdapter
 import com.projetdev.malo.musichall.adapters.MainRVDecorator
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private var isSearchShown: Boolean = true
 
-    private var searchMode: Int = Constant.ARTIST
+    private var searchMode: Int = Constant.RELEASE
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         val switchSearchButton = findViewById<ImageView>(R.id.switch_search_button)
 
-        myAdapter = MainAdapter(api.search(Constant.ARTIST), this@MainActivity)
+        myAdapter = MainAdapter(api.search(Constant.RELEASE), this@MainActivity)
 
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
@@ -108,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun switchSearch(view: View) {
-        searchMode = if(searchMode == 1) 0 else 1
+        searchMode = if (searchMode == 1) 0 else 1
 
         val newList = api.search(searchMode)
         handler.post {
@@ -121,39 +120,6 @@ class MainActivity : AppCompatActivity() {
 
         startActivity(intent)
     }
-
-    private fun hideSearchBar(searchBar: SearchView, switchSearchButton: ImageView, speed: Long = 250): Boolean {
-        val valueAnimator = ValueAnimator.ofFloat(0f, -200f)
-        valueAnimator.addUpdateListener {
-            val value = it.animatedValue as Float
-            searchBar.translationY = value
-            switchSearchButton.translationY = value
-        }
-
-        valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.duration = speed
-
-        valueAnimator.start()
-
-        return false
-    }
-
-    private fun showSearchBar(searchBar: SearchView, switchSearchButton: ImageView, speed: Long = 250): Boolean {
-        val valueAnimator = ValueAnimator.ofFloat(-200f, 0f)
-        valueAnimator.addUpdateListener {
-            val value = it.animatedValue as Float
-            searchBar.translationY = value
-            switchSearchButton.translationY = value
-        }
-
-        valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.duration = speed
-
-        valueAnimator.start()
-
-        return true
-    }
-
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)

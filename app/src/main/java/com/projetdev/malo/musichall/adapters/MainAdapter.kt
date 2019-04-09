@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.projetdev.malo.musichall.Activitutils
+import com.projetdev.malo.musichall.Utils.Activitutils
 import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.R
+import com.projetdev.malo.musichall.models.Artist
+import com.projetdev.malo.musichall.models.Disc
 import com.projetdev.malo.musichall.models.Result
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.row_list_main_rv.view.*
@@ -32,8 +34,14 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.e("MERDENIO", items[position].thumbnail)
-        holder.textView.text = items[position].name
+        holder.title.text = items[position].name
         holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].thumbnail))
+
+        if(items[position] is Artist) {
+            //items.containsAll()
+        } else if(items[position] is Disc) {
+            holder.subtitle.text = (items[position] as Disc)
+        }
 
         Picasso.get()
             .load(items[position].thumbnail)
@@ -63,6 +71,9 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val row = view.search_row
-    val textView = view.search_textview_title
+    val title = view.search_textview_title
     val imageView = view.search_imageview
+    val year = view.search_textview_year
+    val subtitle = view.search_textview_subtitle
+
 }

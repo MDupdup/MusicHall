@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall
+package com.projetdev.malo.musichall.Utils
 
 class Constant {
 

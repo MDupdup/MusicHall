@@ -1,5 +1,7 @@
 package com.projetdev.malo.musichall.models;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class Artist extends Result {
@@ -11,6 +13,11 @@ public class Artist extends Result {
     private String description;
     private ArrayList<Disc> discography;
     private ArrayList<Member> members;
+
+    public Artist(String name) {
+        super(0, name, "");
+        this.name = name;
+    }
 
     public Artist(int id, String name, String thumbnail) {
         super(id, name, thumbnail);

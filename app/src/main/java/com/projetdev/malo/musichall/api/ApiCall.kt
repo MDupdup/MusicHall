@@ -125,12 +125,16 @@ class ApiCall(private val url: String) {
                     for (i in 0 until jsonArrayDiscs.length()) {
                         val jsonDiscs = jsonArrayDiscs.getJSONObject(i)
 
-                        discography.add(Disc(
-                            jsonDiscs.getInt("ID"),
-                            jsonDiscs.getString("Title"),
-                            jsonDiscs.getInt("Year"),
-                            jsonDiscs.getString("Thumb")
-                        ))
+                        discography.add(
+                            Disc(
+                                jsonDiscs.getInt("ID"),
+                                jsonDiscs.getString("Title"),
+                                jsonDiscs.getInt("Year"),
+                                jsonDiscs.getString("Thumb"),
+                                arrayListOf(Artist(json.getString("name"))),
+                                null
+                            )
+                        )
                     }
 
                     val members = ArrayList<Member>()
@@ -138,12 +142,14 @@ class ApiCall(private val url: String) {
                     for (i in 0 until jsonArrayMembers.length()) {
                         val jsonMembers = jsonArrayMembers.getJSONObject(i)
 
-                        members.add(Member(
-                            jsonMembers.getInt("id"),
-                            jsonMembers.getString("name"),
-                            jsonMembers.getString("resource_url"),
-                            jsonMembers.getBoolean("active")
-                        ))
+                        members.add(
+                            Member(
+                                jsonMembers.getInt("id"),
+                                jsonMembers.getString("name"),
+                                jsonMembers.getString("resource_url"),
+                                jsonMembers.getBoolean("active")
+                            )
+                        )
                     }
 
                     artist = Artist(
@@ -164,16 +170,20 @@ class ApiCall(private val url: String) {
         return artist
     }
 
-   fun searchForReleases(value: String?): ArrayList<Result> {
+    private fun searchForReleases(value: String?): ArrayList<Result> {
 
-        val discList = ArrayList<Disc>()
+        val discList = ArrayList<Result>()
+
+
+        if (value == "" || value == null) return discList
+
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
             .url(this.url + "/search/release/" + value)
             .build()
 
-        var countDownLatch = CountDownLatch(1)
+        val countDownLatch = CountDownLatch(1)
         getClient()?.newCall(req)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERR", "Excuse me what the fuck")
@@ -189,26 +199,31 @@ class ApiCall(private val url: String) {
                         val json = JSONArray(response.body()!!.string())
                         for (i in 0 until json.length()) {
                             val jsonObject = json.getJSONObject(i)
+
+                            val titlePair = parseReleaseTitle(jsonObject.getString("title"))
+
+                            // Get full styles list
+                            val jsonStyles = jsonObject.getJSONArray("Style")
+                            val stylesList = mutableListOf<String>();
+                            for (i in 0 until jsonStyles.length()) {
+                                stylesList += jsonStyles.getString(i)
+                            }
+
                             discList.add(
                                 Disc(
                                     jsonObject.getInt("id"),
-                                    jsonObject.getString("title"),
-                                    parseInt(jsonObject.getString("year")),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    jsonObject.getString("thumb"),
-                                    )
+                                    titlePair.second,
+                                    parseYear(jsonObject.getString("Year")),
+                                    jsonObject.getString("cover_image"),
+                                    arrayListOf(Artist(titlePair.first)),
+                                    stylesList
+                                )
                             )
                         }
                         countDownLatch.countDown()
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-
                 }
             }
         })
@@ -217,9 +232,9 @@ class ApiCall(private val url: String) {
     }
 
     fun search(mode: Int, value: String? = ""): ArrayList<Result> {
-        if(mode == 0) {
+        if (mode == 0) {
             return searchForArtists(value)
-        } else if(mode == 1) {
+        } else if (mode == 1) {
             return searchForReleases(value)
         }
 
@@ -233,7 +248,7 @@ class ApiCall(private val url: String) {
 
         Log.e("MDR", this.url + "/search/artist/" + value)
 
-        if(value == "" || value == null) return artistList
+        if (value == "" || value == null) return artistList
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
@@ -277,9 +292,22 @@ class ApiCall(private val url: String) {
         return artistList
     }
 
+
+    private fun parseYear(year: String): Int {
+        return if (year == "") 0 else parseInt(year)
+    }
+
+    private fun parseReleaseTitle(title: String): Pair<String, String> {
+        val parts: List<String> = title.split("-")
+
+        val pair = Pair(parts[0], parts[1])
+
+        return pair
+    }
+
     private fun timeToInt(time: String): Int {
-        val splittedTime = time.split(":")
-        val finalTime = parseInt(splittedTime[0])*60 + parseInt(splittedTime[1])
+        val splitTime = time.split(":")
+        val finalTime = parseInt(splitTime[0]) * 60 + parseInt(splitTime[1])
 
         return finalTime
     }

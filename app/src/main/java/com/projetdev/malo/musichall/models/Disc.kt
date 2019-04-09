@@ -1,7 +1,7 @@
 package com.projetdev.malo.musichall.models
 
 class Disc(
-    override val id: Int, override val name: String, dateReleased: Int, override val thumbnail: String
+    override val id: Int, override val name: String, dateReleased: Int, override val thumbnail: String, artists: ArrayList<Artist>, style: List<String>?
 ) : Result(id, name, thumbnail) {
     constructor(
         id: Int,
@@ -15,5 +15,5 @@ class Disc(
         url: String,
         labels: List<String>,
         trackList: ArrayList<Track>
-        ) : this(id, name, dateReleased, thumbnail)
+        ) : this(id, name, dateReleased, thumbnail, artists, style)
 }

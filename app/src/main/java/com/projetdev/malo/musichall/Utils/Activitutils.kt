@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall
+package com.projetdev.malo.musichall.Utils
 
 import android.graphics.drawable.Drawable
 import java.io.InputStream

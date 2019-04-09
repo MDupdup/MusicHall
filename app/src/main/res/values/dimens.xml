@@ -5,4 +5,5 @@
     <dimen name="search_recyclerview_item_height">125dp</dimen>
     <dimen name="search_title_size">20sp</dimen>
     <dimen name="detail_image_height">200dp</dimen>
+    <dimen name="search_subtitle_size">17sp</dimen>
 </resources>
