@@ -14,13 +14,44 @@
             android:layout_height="wrap_content"
             android:height="65dp"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="5dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
 
-            android:tooltipText="Enter your search"
             android:focusedByDefault="false"
             app:iconifiedByDefault="false"
             android:elevation="5dp"
-            android:background="@drawable/searchbar"/>
+            android:background="@drawable/searchbar">
+
+    </android.support.v7.widget.SearchView>
+
+<!--    <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/searchAutoComplete"
+
+            android:background="@drawable/searchbar"
+            android:onClick="switchSearch"
+            android:elevation="6dp" >
+    </Button>-->
+    <ImageView
+            android:id="@+id/switch_search_button"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+
+
+            android:onClick="switchSearch"
+            android:elevation="5dp"
+            android:background="@drawable/searchbar"
+            android:src="@drawable/ic_switch_search_black_16dp"
+    />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -46,19 +77,19 @@
             fab:menu_backgroundColor="#ccffffff"
             fab:menu_fab_label="Menu label">
 
-        <com.github.clans.fab.FloatingActionButton
+<!--        <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/fab_add"
                 fab:fab_size="mini"
-                fab:fab_label="Disabled"/>
+                fab:fab_label="Disabled"/>-->
 
         <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/fab_add"
+                android:src="@drawable/ic_collection_white_24dp"
                 android:onClick="getToCollection"
                 fab:fab_size="mini"
                 fab:fab_label="Ma collection"/>

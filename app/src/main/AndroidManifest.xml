@@ -14,16 +14,19 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CollectionActivity">
+        <activity android:name=".CollectionActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ArtistDetailActivity">
+        <activity android:name=".ArtistDetailActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
     </application>

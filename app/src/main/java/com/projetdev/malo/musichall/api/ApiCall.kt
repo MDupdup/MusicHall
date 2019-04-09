@@ -164,7 +164,7 @@ class ApiCall(private val url: String) {
         return artist
     }
 
-/*    fun searchForReleases(value: String): ArrayList<Disc> {
+   fun searchForReleases(value: String?): ArrayList<Result> {
 
         val discList = ArrayList<Disc>()
 
@@ -214,9 +214,20 @@ class ApiCall(private val url: String) {
         })
         countDownLatch.await()
         return discList
-    }*/
+    }
 
-    fun searchForArtists(value: String? = ""): ArrayList<Result> {
+    fun search(mode: Int, value: String? = ""): ArrayList<Result> {
+        if(mode == 0) {
+            return searchForArtists(value)
+        } else if(mode == 1) {
+            return searchForReleases(value)
+        }
+
+        return ArrayList<Result>()
+    }
+
+
+    private fun searchForArtists(value: String? = ""): ArrayList<Result> {
 
         val artistList = ArrayList<Result>()
 

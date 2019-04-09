@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 
 class ArtistDetailActivity : AppCompatActivity() {
 
-    val api: ApiCall = ApiCall("http://192.168.1.11:3333")
+    val api: ApiCall = ApiCall(Constant.ADDRESS)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
