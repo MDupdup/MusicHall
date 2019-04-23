@@ -18,6 +18,7 @@ import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.MainAdapter
 import com.projetdev.malo.musichall.adapters.MainRVDecorator
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -38,12 +39,16 @@ class MainActivity : AppCompatActivity() {
 
     private var isSearchShown: Boolean = true
 
-    private var searchMode: Int = Constant.RELEASE
+    companion object {
+        var searchMode: Int = Constant.RELEASE
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         api = ApiCall(Constant.ADDRESS)
 
@@ -105,9 +110,20 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
     fun switchSearch(view: View) {
-        searchMode = if (searchMode == 1) 0 else 1
+
+        val image = view.switch_search_button
+        val searchbar = findViewById<SearchView>(R.id.searchAutoComplete)
+
+        if (searchMode == 1) {
+            searchMode = 0
+            image.setImageDrawable(getDrawable(R.drawable.ic_music_note_black_512dp))
+            searchbar.queryHint = "Search for an artist..."
+        } else {
+            searchMode = 1
+            image.setImageDrawable(getDrawable(R.drawable.ic_group_black_512dp))
+            searchbar.queryHint = "Search for a release..."
+        }
 
         val newList = api.search(searchMode)
         handler.post {

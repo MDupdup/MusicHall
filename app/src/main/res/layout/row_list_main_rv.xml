@@ -31,11 +31,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
 
+                android:maxLines="1"
+                android:ellipsize="end"
+
                 android:text="@string/search_textview_value"
                 android:textSize="@dimen/search_title_size"
                 android:textColor="@android:color/black"/>
 
-        <TextView
+<!--        <TextView
                 android:id="@+id/search_textview_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,16 +46,27 @@
 
                 android:text="@string/search_textview_subtitle"
                 android:textSize="@dimen/search_subtitle_size"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"/>-->
 
         <TextView
                 android:id="@+id/search_textview_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
 
                 android:text="@string/search_textview_yearfield"
-                android:textStyle="italic"/>
+                android:textStyle="italic"
+                android:textSize="18sp"/>
+
+        <LinearLayout
+                android:id="@+id/taglist"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+        </LinearLayout>
 
     </LinearLayout>
 

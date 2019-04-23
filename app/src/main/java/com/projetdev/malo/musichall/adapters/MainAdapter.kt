@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.projetdev.malo.musichall.Utils.Activitutils
 import com.projetdev.malo.musichall.ArtistDetailActivity
+import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
+import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.models.Artist
 import com.projetdev.malo.musichall.models.Disc
 import com.projetdev.malo.musichall.models.Result
@@ -37,10 +39,20 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
         holder.title.text = items[position].name
         holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].thumbnail))
 
-        if(items[position] is Artist) {
+        if(MainActivity.searchMode == Constant.ARTIST) {
             //items.containsAll()
-        } else if(items[position] is Disc) {
-            holder.subtitle.text = (items[position] as Disc)
+        } else if(MainActivity.searchMode == Constant.RELEASE) {
+            holder.year.text = items[position].year
+
+
+            holder.taglist.removeAllViews()
+
+            var i = 0
+            items[position].style?.forEach {
+                if(i == 3) return
+                holder.taglist.addView(Activitutils.createTag(context, it))
+                i++
+            }
         }
 
         Picasso.get()
@@ -74,6 +86,6 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val title = view.search_textview_title
     val imageView = view.search_imageview
     val year = view.search_textview_year
-    val subtitle = view.search_textview_subtitle
-
+    //val subtitle = view.search_textview_subtitle
+    val taglist = view.taglist
 }

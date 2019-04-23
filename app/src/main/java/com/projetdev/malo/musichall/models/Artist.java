@@ -15,19 +15,19 @@ public class Artist extends Result {
     private ArrayList<Member> members;
 
     public Artist(String name) {
-        super(0, name, "");
+        super(0, name, "", "", "", null);
         this.name = name;
     }
 
     public Artist(int id, String name, String thumbnail) {
-        super(id, name, thumbnail);
+        super(id, name, thumbnail, "", "", null);
         this.id = id;
         this.name = name;
         this.thumbnail = thumbnail;
     }
 
     public Artist(int id, String name, String thumbnail, String uri) {
-        super(id, name, thumbnail);
+        super(id, name, thumbnail, "", "", null);
         this.uri = uri;
         this.id = id;
         this.name = name;
@@ -35,7 +35,7 @@ public class Artist extends Result {
     }
 
     public Artist(int id, String name, String uri, String thumbnail, String description, ArrayList<Disc> discography, ArrayList<Member> members) {
-        super(id, name, thumbnail);
+        super(id, name, thumbnail, "", "", null);
         this.id = id;
         this.name = name;
         this.thumbnail = thumbnail;

@@ -19,7 +19,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
 
-            android:focusedByDefault="false"
+            app:queryHint="Search for a release..."
             app:iconifiedByDefault="false"
             android:elevation="5dp"
             android:background="@drawable/searchbar">
@@ -50,7 +50,7 @@
             android:onClick="switchSearch"
             android:elevation="5dp"
             android:background="@drawable/searchbar"
-            android:src="@drawable/ic_switch_search_black_16dp"
+            android:src="@drawable/ic_group_black_512dp"
     />
 
     <android.support.v7.widget.RecyclerView
