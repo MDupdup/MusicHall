@@ -195,14 +195,14 @@ class ApiCall(private val url: String) {
         return discList
     }
 
-    fun search(mode: Int, value: String? = ""): ArrayList<Result> {
+    fun search(mode: Int, value: String? = ""): ArrayList<Item> {
         if (mode == 0) {
             //return searchForArtists(value)
         } else if (mode == 1) {
             //return searchForAlbums(value)
         }
 
-        return ArrayList<Result>()
+        return ArrayList<Item>()
     }
 
 

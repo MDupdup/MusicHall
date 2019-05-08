@@ -1,8 +1,8 @@
 package com.projetdev.malo.musichall.models
 
 class Artist(
-    val name: String
-) {
+    override val name: String
+) : Item("", name, "", null) {
     constructor(
         name: String,
         images: Map<String, String>?

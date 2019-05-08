@@ -3,7 +3,6 @@ package com.projetdev.malo.musichall.adapters
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,13 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.models.Result
+import com.projetdev.malo.musichall.models.Item
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
 import java.util.ArrayList
 
-class MainAdapter internal constructor(private var items: ArrayList<Result>, context: Context) :
+class MainAdapter internal constructor(private var items: ArrayList<Item>, context: Context) :
     RecyclerView.Adapter<ViewHolder>() {
 
     private var context: Context
@@ -33,28 +32,27 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.e("MERDENIO", items[position].thumbnail)
         holder.title.text = items[position].name
-        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].thumbnail))
+        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("medium")!!))
 
         if(MainActivity.searchMode == Constant.ARTIST) {
             //items.containsAll()
         } else if(MainActivity.searchMode == Constant.RELEASE) {
-            holder.year.text = items[position].year
+            //holder.year.text = items[position].year
 
 
             holder.taglist.removeAllViews()
 
             var i = 0
-            items[position].style?.forEach {
+            /*items[position].style?.forEach {
                 if(i == 3) return
                 holder.taglist.addView(Activitutils.createTag(context, it))
                 i++
-            }
+            }*/
         }
 
         Picasso.get()
-            .load(items[position].thumbnail)
+            .load(items[position].images?.get("medium")!!)
             .placeholder(R.drawable.ic_image_black_512dp)
             .into(holder.imageView)
 
@@ -62,7 +60,6 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
             override fun onClick(v: View?) {
                 val intent = Intent(context, ArtistDetailActivity::class.java)
                 intent.putExtra("id", items[position].id)
-                intent.putExtra("thumb", items[position].thumbnail)
 
                 context.startActivity(intent)
             }
@@ -73,7 +70,7 @@ class MainAdapter internal constructor(private var items: ArrayList<Result>, con
         return items.size
     }
 
-    fun refreshList(newList: ArrayList<Result>) {
+    fun refreshList(newList: ArrayList<Item>) {
         items = newList
         notifyDataSetChanged()
     }
