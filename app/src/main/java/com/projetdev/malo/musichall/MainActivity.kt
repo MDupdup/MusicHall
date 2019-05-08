@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
         api = ApiCall(Constant.ADDRESS)
 
         menuFab = findViewById(R.id.menu_fab)

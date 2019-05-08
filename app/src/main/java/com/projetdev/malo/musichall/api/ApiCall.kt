@@ -64,12 +64,16 @@ class ApiCall(private val url: String) {
                             )
                         }
 
+                        val tags = ArrayList<String>()
+                        val jsonTags = json.getJSONArray("Tags")
+                        for(i in 0 until jsonTags.length()) tags.add(jsonTags.getString(i))
+
                         album = Album(
                             json.getString("Mbid"),
                             json.getString("Name"),
                             json.getString("Url"),
                             Artist(json.getString("Artist")),
-                            images,
+                            getImages(json.getJSONArray("Images")),
                             trackList,
                             tags,
                             json.getString("Summup"),
@@ -80,7 +84,6 @@ class ApiCall(private val url: String) {
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-
                 }
             }
         })
@@ -109,46 +112,28 @@ class ApiCall(private val url: String) {
                 } else {
                     val json = JSONObject(response.body()!!.string())
 
-                    val discography = ArrayList<Album>()
-                    val jsonArrayDiscs = json.getJSONArray("ReleasesMin")
-                    for (i in 0 until jsonArrayDiscs.length()) {
-                        val jsonDiscs = jsonArrayDiscs.getJSONObject(i)
+                    // Get similar artists
+                    val similarArtists = ArrayList<Artist>()
+                    val jsonSimilarArtists = json.getJSONArray("Similar")
+                    for (i in 0 until jsonSimilarArtists.length()) {
+                        val similarArtist = jsonSimilarArtists.getJSONObject(i)
 
-                        discography.add(
-                            Album(
-                                jsonDiscs.getInt("ID"),
-                                jsonDiscs.getString("Title"),
-                                jsonDiscs.getInt("Year"),
-                                jsonDiscs.getString("Thumb"),
-                                arrayListOf(Artist(json.getString("name"))),
-                                null
-                            )
-                        )
-                    }
-
-                    val members = ArrayList<Member>()
-                    val jsonArrayMembers = json.getJSONArray("Members")
-                    for (i in 0 until jsonArrayMembers.length()) {
-                        val jsonMembers = jsonArrayMembers.getJSONObject(i)
-
-                        members.add(
-                            Member(
-                                jsonMembers.getInt("id"),
-                                jsonMembers.getString("name"),
-                                jsonMembers.getString("resource_url"),
-                                jsonMembers.getBoolean("active")
-                            )
-                        )
+                        similarArtists.add(Artist(
+                            similarArtist.getString("Name"),
+                            getImages(similarArtist.getJSONArray("Images"))
+                        ))
                     }
 
                     artist = Artist(
-                        json.getInt("id"),
-                        json.getString("name"),
-                        "",
-                        "",
-                        json.getString("profile"),
-                        discography,
-                        members
+                        json.getString("Mbid"),
+                        json.getString("Name"),
+                        json.getString("Url"),
+                        json.getString("PlayCount").toLong(),
+                        getImages(json.getJSONArray("Images")),
+                        json.getBoolean("IsOnTour"),
+                        similarArtists,
+                        json.getString("Summup"),
+                        json.getString("Content")
                     )
 
                     countDownLatch.countDown()
@@ -159,9 +144,9 @@ class ApiCall(private val url: String) {
         return artist
     }
 
-    private fun searchForReleases(value: String?): ArrayList<Result> {
+    private fun searchForAlbums(value: String?): ArrayList<Album> {
 
-        val discList = ArrayList<Result>()
+        val discList = ArrayList<Album>()
 
 
         if (value == "" || value == null) return discList
@@ -169,7 +154,7 @@ class ApiCall(private val url: String) {
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
-            .url(this.url + "/search/release/" + value)
+            .url(this.url + "/search/album/" + value)
             .build()
 
         val countDownLatch = CountDownLatch(1)
@@ -189,23 +174,13 @@ class ApiCall(private val url: String) {
                         for (i in 0 until json.length()) {
                             val jsonObject = json.getJSONObject(i)
 
-                            val titlePair = parseReleaseTitle(jsonObject.getString("title"))
-
-                            // Get full styles list
-                            val jsonStyles = jsonObject.getJSONArray("Style")
-                            val stylesList = mutableListOf<String>();
-                            for (i in 0 until jsonStyles.length()) {
-                                stylesList += jsonStyles.getString(i)
-                            }
-
                             discList.add(
                                 Album(
-                                    jsonObject.getInt("id"),
-                                    titlePair.second,
-                                    parseYear(jsonObject.getString("Year")),
-                                    jsonObject.getString("cover_image"),
-                                    arrayListOf(Artist(titlePair.first)),
-                                    stylesList
+                                    jsonObject.getString("Mbid"),
+                                    jsonObject.getString("Name"),
+                                    jsonObject.getString("Url"),
+                                    Artist(jsonObject.getString("Artist")),
+                                    getImages(jsonObject.getJSONArray("Images"))
                                 )
                             )
                         }
@@ -222,18 +197,18 @@ class ApiCall(private val url: String) {
 
     fun search(mode: Int, value: String? = ""): ArrayList<Result> {
         if (mode == 0) {
-            return searchForArtists(value)
+            //return searchForArtists(value)
         } else if (mode == 1) {
-            return searchForReleases(value)
+            //return searchForAlbums(value)
         }
 
         return ArrayList<Result>()
     }
 
 
-    private fun searchForArtists(value: String? = ""): ArrayList<Result> {
+    private fun searchForArtists(value: String? = ""): ArrayList<Artist> {
 
-        val artistList = ArrayList<Result>()
+        val artistList = ArrayList<Artist>()
 
         Log.e("MDR", this.url + "/search/artist/" + value)
 
@@ -262,9 +237,11 @@ class ApiCall(private val url: String) {
                             val jsonObject = json.getJSONObject(i)
                             artistList.add(
                                 Artist(
-                                    jsonObject.getInt("id"),
-                                    jsonObject.getString("title"),
-                                    jsonObject.getString("cover_image")
+                                    jsonObject.getString("Mbid"),
+                                    jsonObject.getString("Name"),
+                                    jsonObject.getString("Url"),
+                                    jsonObject.getString("PlayCount").toLong(),
+                                    getImages(jsonObject.getJSONArray("Images"))
                                 )
                             )
                         }
@@ -272,7 +249,6 @@ class ApiCall(private val url: String) {
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-
                 }
             }
         })
@@ -281,6 +257,15 @@ class ApiCall(private val url: String) {
         return artistList
     }
 
+    private fun getImages(jsonImages: JSONArray): MutableMap<String,String> {
+        val imagesMap = mutableMapOf<String,String>()
+        for (i in 0 until jsonImages.length()) {
+            val image = jsonImages.getJSONObject(i)
+            imagesMap.put(image.getString("Size"), image.getString("Url"))
+        }
+
+        return imagesMap
+    }
 
     private fun parseYear(year: String): Int {
         return if (year == "") 0 else parseInt(year)

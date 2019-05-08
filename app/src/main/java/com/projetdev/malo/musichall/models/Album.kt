@@ -7,9 +7,17 @@ class Album(
     val title:      String,
     val url:        String,
     val artist:     Artist,
-    val images:     Map<String,String>,
-    val tracks:     ArrayList<Track>?,
-    val tags:       Map<String,String>?,
-    val summup:     String?,
-    val content:    String?
-)
+    val images:     Map<String,String>
+) {
+    constructor(
+        id:         String,
+        title:      String,
+        url:        String,
+        artist:     Artist,
+        images:     Map<String,String>,
+        tracks:     ArrayList<Track>?,
+        tags:       ArrayList<String>?,
+        summup:     String?,
+        content:    String?
+    ) : this(id, title, url, artist, images)
+}
