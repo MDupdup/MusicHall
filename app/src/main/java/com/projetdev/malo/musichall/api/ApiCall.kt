@@ -14,12 +14,12 @@ import java.util.concurrent.CountDownLatch
 
 class ApiCall(private val url: String) {
 
-    fun getRelease(id: Int): Disc? {
-        var disc: Disc? = null
+    fun getAlbum(id: Int): Album? {
+        var album: Album? = null
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
-            .url(this.url + "/release/" + id)
+            .url(this.url + "/album/" + id)
             .build()
 
         val countDownLatch = CountDownLatch(1)
@@ -45,18 +45,11 @@ class ApiCall(private val url: String) {
                             trackList.add(
                                 Track(
                                     jsonObject.getString("title"),
+                                    jsonObject.getString("url"),
                                     jsonObject.getInt("position"),
                                     timeToInt(jsonObject.getString("duration"))
                                 )
                             )
-                        }
-                        // Get full label list
-                        val jsonLabelList = json.getJSONArray("labels")
-                        val labelList = mutableListOf<String>();
-                        System.err.println(jsonLabelList.length())
-                        for (i in 0 until jsonLabelList.length()) {
-                            System.err.println(jsonLabelList.getJSONObject(i).getString("name"))
-                            labelList += jsonLabelList.getJSONObject(i).getString("name")
                         }
 
                         // Get full track list
@@ -66,25 +59,21 @@ class ApiCall(private val url: String) {
                             val jsonObject = jsonArtistList.getJSONObject(i)
                             artistList.add(
                                 Artist(
-                                    jsonObject.getInt("id"),
-                                    jsonObject.getString("name"),
-                                    jsonObject.getString("resource_url")
+                                    jsonObject.getString("name")
                                 )
                             )
                         }
 
-                        disc = Disc(
-                            id,
-                            json.getString("title"),
-                            json.getInt("year"),
-                            json.getString("thumb"),
-                            artistList,
-                            getArrayFromJson(json.getJSONArray("styles")),
-                            getArrayFromJson(json.getJSONArray("formats").getJSONObject(0).getJSONArray("descriptions")),
-                            json.getString("country"),
-                            json.getString("uri"),
-                            labelList,
-                            trackList
+                        album = Album(
+                            json.getString("Mbid"),
+                            json.getString("Name"),
+                            json.getString("Url"),
+                            Artist(json.getString("Artist")),
+                            images,
+                            trackList,
+                            tags,
+                            json.getString("Summup"),
+                            json.getString("Content")
                         )
 
                         countDownLatch.countDown()
@@ -96,7 +85,7 @@ class ApiCall(private val url: String) {
             }
         })
         countDownLatch.await()
-        return disc
+        return album
     }
 
     fun getArtist(id: Int): Artist? {
@@ -120,13 +109,13 @@ class ApiCall(private val url: String) {
                 } else {
                     val json = JSONObject(response.body()!!.string())
 
-                    val discography = ArrayList<Disc>()
+                    val discography = ArrayList<Album>()
                     val jsonArrayDiscs = json.getJSONArray("ReleasesMin")
                     for (i in 0 until jsonArrayDiscs.length()) {
                         val jsonDiscs = jsonArrayDiscs.getJSONObject(i)
 
                         discography.add(
-                            Disc(
+                            Album(
                                 jsonDiscs.getInt("ID"),
                                 jsonDiscs.getString("Title"),
                                 jsonDiscs.getInt("Year"),
@@ -210,7 +199,7 @@ class ApiCall(private val url: String) {
                             }
 
                             discList.add(
-                                Disc(
+                                Album(
                                     jsonObject.getInt("id"),
                                     titlePair.second,
                                     parseYear(jsonObject.getString("Year")),

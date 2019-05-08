@@ -12,8 +12,6 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.models.Artist
-import com.projetdev.malo.musichall.models.Disc
 import com.projetdev.malo.musichall.models.Result
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.row_list_main_rv.view.*
