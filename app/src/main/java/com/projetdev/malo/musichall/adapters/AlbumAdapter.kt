@@ -11,14 +11,15 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
+import com.projetdev.malo.musichall.models.Album
 import com.projetdev.malo.musichall.models.Item
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
 import java.util.ArrayList
 
-class MainAdapter internal constructor(private var items: ArrayList<Item>, context: Context) :
-    RecyclerView.Adapter<ViewHolder>() {
+class AlbumAdapter internal constructor(private var items: ArrayList<Album>, context: Context) :
+    RecyclerView.Adapter<AlbumViewHolder>() {
 
     private var context: Context
 
@@ -26,12 +27,12 @@ class MainAdapter internal constructor(private var items: ArrayList<Item>, conte
         this.context = context
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
 
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_main_rv, parent, false))
+        return AlbumViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_main_rv, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         holder.title.text = items[position].name
         holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("medium")!!))
 
@@ -70,17 +71,8 @@ class MainAdapter internal constructor(private var items: ArrayList<Item>, conte
         return items.size
     }
 
-    fun refreshList(newList: ArrayList<Item>) {
+    fun refreshList(newList: ArrayList<Album>) {
         items = newList
         notifyDataSetChanged()
     }
-}
-
-class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val row = view.search_row
-    val title = view.search_textview_title
-    val imageView = view.search_imageview
-    val year = view.search_textview_year
-    //val subtitle = view.search_textview_subtitle
-    val taglist = view.taglist
 }

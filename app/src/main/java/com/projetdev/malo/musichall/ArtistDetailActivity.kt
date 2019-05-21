@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
+import com.projetdev.malo.musichall.models.Artist
 import com.squareup.picasso.Picasso
 
 class ArtistDetailActivity : AppCompatActivity() {
@@ -20,13 +21,13 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         val data = intent
 
-        val artist = api.getArtist(data.getIntExtra("id",0))
+        val artist: Artist? = api.getArtist(data.getIntExtra("id",0))
 
         Picasso.get()
             .load(data.getStringExtra("thumb"))
             .into(findViewById<ImageView>(R.id.cover_image))
 
         findViewById<TextView>(R.id.artist_detail_title).text = artist?.name
-        findViewById<TextView>(R.id.artist_detail_desc).text  = artist?.description
+        findViewById<TextView>(R.id.artist_detail_desc).text  = artist?.summup
     }
 }

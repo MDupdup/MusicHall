@@ -15,6 +15,8 @@ import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
 import com.projetdev.malo.musichall.Utils.Constant
+import com.projetdev.malo.musichall.adapters.AlbumAdapter
+import com.projetdev.malo.musichall.adapters.ArtistAdapter
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.MainAdapter
 import com.projetdev.malo.musichall.adapters.MainRVDecorator
@@ -30,7 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var menuFab: FloatingActionMenu
 
-    private lateinit var myAdapter: MainAdapter
+    private lateinit var albumAdapter: AlbumAdapter
+    private lateinit var artistAdapter: ArtistAdapter
 
     private var initTimer: Boolean = true
     private var isTimerActive: Boolean = false
@@ -57,13 +60,13 @@ class MainActivity : AppCompatActivity() {
 
         val switchSearchButton = findViewById<ImageView>(R.id.switch_search_button)
 
-        myAdapter = MainAdapter(api.search(Constant.RELEASE), this@MainActivity)
+        albumAdapter = AlbumAdapter(api.search(Constant.RELEASE), this@MainActivity)
 
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = myAdapter
+            adapter = albumAdapter
             addItemDecoration(MainRVDecorator(150))
         }
 
@@ -98,10 +101,21 @@ class MainActivity : AppCompatActivity() {
                     isTimerActive = false
                     initTimer = false
 
-                    val queryList = api.search(searchMode, newText?.replace(" ", "%20"))
-                    handler.post {
-                        myAdapter.refreshList(queryList)
+
+                    if(searchMode == Constant.ARTIST) {
+                        val queryList = api.searchForArtists(newText?.replace(" ", "%20"))
+                        handler.post {
+                            artistAdapter.refreshList(queryList)
+                            recyclerView.adapter = artistAdapter
+                        }
+                    } else{
+                        val queryList = api.searchForAlbums(newText?.replace(" ", "%20"))
+                        handler.post {
+                            albumAdapter.refreshList(queryList)
+                            recyclerView.adapter = albumAdapter
+                        }
                     }
+
                 }
                 return true
             }

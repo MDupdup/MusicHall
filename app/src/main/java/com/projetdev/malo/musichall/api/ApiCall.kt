@@ -144,7 +144,7 @@ class ApiCall(private val url: String) {
         return artist
     }
 
-    private fun searchForAlbums(value: String?): ArrayList<Album> {
+    fun searchForAlbums(value: String?): ArrayList<Album> {
 
         val discList = ArrayList<Album>()
 
@@ -195,7 +195,7 @@ class ApiCall(private val url: String) {
         return discList
     }
 
-    fun search(mode: Int, value: String? = ""): ArrayList<Item> {
+/*    fun search(mode: Int, value: String? = ""): ArrayList<Item> {
         if (mode == 0) {
             //return searchForArtists(value)
         } else if (mode == 1) {
@@ -203,10 +203,10 @@ class ApiCall(private val url: String) {
         }
 
         return ArrayList<Item>()
-    }
+    }*/
 
 
-    private fun searchForArtists(value: String? = ""): ArrayList<Artist> {
+    fun searchForArtists(value: String? = ""): ArrayList<Artist> {
 
         val artistList = ArrayList<Artist>()
 
