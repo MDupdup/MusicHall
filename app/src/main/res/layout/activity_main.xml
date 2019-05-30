@@ -19,7 +19,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
 
-            app:queryHint="Search for a release..."
+            app:queryHint="Search for an album..."
             app:iconifiedByDefault="false"
             android:elevation="5dp"
             android:background="@drawable/searchbar">
@@ -77,7 +77,7 @@
             fab:menu_backgroundColor="#ccffffff"
             fab:menu_fab_label="Menu label">
 
-<!--        <com.github.clans.fab.FloatingActionButton
+        <!--        <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

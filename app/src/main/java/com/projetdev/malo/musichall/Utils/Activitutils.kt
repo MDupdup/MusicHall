@@ -14,7 +14,7 @@ import java.net.URL
 class Activitutils {
 
     companion object {
-        fun loadImageFromWebOperations(url: String): Drawable? {
+        fun loadImageFromWebOperations(url: String?): Drawable? {
             try {
                 val `is` = URL(url).getContent() as InputStream
                 return Drawable.createFromStream(`is`, "src name")

@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+/*package com.projetdev.malo.musichall.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -11,10 +11,7 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.models.Album
-import com.projetdev.malo.musichall.models.Item
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
 import java.util.ArrayList
 
@@ -53,7 +50,7 @@ class AlbumAdapter internal constructor(private var items: ArrayList<Album>, con
         }
 
         Picasso.get()
-            .load(items[position].images?.get("medium")!!)
+            .load(items[position].images.get("extralarge")!!)
             .placeholder(R.drawable.ic_image_black_512dp)
             .into(holder.imageView)
 
@@ -76,3 +73,4 @@ class AlbumAdapter internal constructor(private var items: ArrayList<Album>, con
         notifyDataSetChanged()
     }
 }
+*/

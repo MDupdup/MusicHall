@@ -21,7 +21,7 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         val data = intent
 
-        val artist: Artist? = api.getArtist(data.getIntExtra("id",0))
+        val artist: Artist? = api.getArtist(data.getStringExtra("id"))
 
         Picasso.get()
             .load(data.getStringExtra("thumb"))

@@ -91,7 +91,7 @@ class ApiCall(private val url: String) {
         return album
     }
 
-    fun getArtist(id: Int): Artist? {
+    fun getArtist(id: String): Artist? {
         var artist: Artist? = null
 
         val req = Request.Builder()
@@ -128,8 +128,8 @@ class ApiCall(private val url: String) {
                         json.getString("Mbid"),
                         json.getString("Name"),
                         json.getString("Url"),
-                        json.getString("PlayCount").toLong(),
                         getImages(json.getJSONArray("Images")),
+                        json.getString("PlayCount"),
                         json.getBoolean("IsOnTour"),
                         similarArtists,
                         json.getString("Summup"),
@@ -144,9 +144,78 @@ class ApiCall(private val url: String) {
         return artist
     }
 
-    fun searchForAlbums(value: String?): ArrayList<Album> {
+    fun search(mode: Int, value: String? = ""): ArrayList<Item> {
+        return when (mode) {
+            0 -> searchForArtists(value)
+            1 -> searchForAlbums(value)
+            2 -> justSearchFfs(value)
+            else -> ArrayList()
+        }
+    }
 
-        val discList = ArrayList<Album>()
+    private fun justSearchFfs(value: String? = ""): ArrayList<Item> {
+        val wholeSearchList = ArrayList<Item>()
+
+        wholeSearchList.addAll(searchForArtists(value))
+        wholeSearchList.addAll(searchForAlbums(value))
+
+        //wholeSearchList.shuffle()
+
+        return wholeSearchList
+    }
+
+    private fun searchForArtists(value: String? = ""): ArrayList<Item> {
+
+        val artistList = ArrayList<Item>()
+
+        if (value == "" || value == null) return artistList
+
+        val req = Request.Builder()
+            .header("Content-Type", "application/json")
+            .url(this.url + "/search/artist/" + value)
+            .build()
+
+            val countDownLatch = CountDownLatch(1)
+            getClient()?.newCall(req)?.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("ERR", "Excuse me what the fuck")
+                    e.printStackTrace()
+                }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    throw IOException("Unexpected response! Code $response")
+                } else {
+                    try {
+                        val json = JSONArray(response.body()!!.string())
+                        for (i in 0 until json.length()) {
+                            val jsonObject = json.getJSONObject(i)
+                            artistList.add(
+                                Artist(
+                                    jsonObject.getString("Mbid"),
+                                    jsonObject.getString("Name"),
+                                    jsonObject.getString("Url"),
+                                    jsonObject.getString("PlayCount"),
+                                    getImages(jsonObject.getJSONArray("Images"))
+                                )
+                            )
+                        }
+                        countDownLatch.countDown()
+                    } catch (e: JSONException) {
+                        Log.e("PTN", e.message, e)
+                    }
+                }
+            }
+        })
+
+        countDownLatch.await()
+        return artistList
+    }
+
+    private fun searchForAlbums(value: String?): ArrayList<Item> {
+
+        val discList = ArrayList<Item>()
 
 
         if (value == "" || value == null) return discList
@@ -195,69 +264,7 @@ class ApiCall(private val url: String) {
         return discList
     }
 
-/*    fun search(mode: Int, value: String? = ""): ArrayList<Item> {
-        if (mode == 0) {
-            //return searchForArtists(value)
-        } else if (mode == 1) {
-            //return searchForAlbums(value)
-        }
-
-        return ArrayList<Item>()
-    }*/
-
-
-    fun searchForArtists(value: String? = ""): ArrayList<Artist> {
-
-        val artistList = ArrayList<Artist>()
-
-        Log.e("MDR", this.url + "/search/artist/" + value)
-
-        if (value == "" || value == null) return artistList
-
-        val req = Request.Builder()
-            .header("Content-Type", "application/json")
-            .url(this.url + "/search/artist/" + value)
-            .build()
-
-        val countDownLatch = CountDownLatch(1)
-        getClient()?.newCall(req)?.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("ERR", "Excuse me what the fuck")
-                e.printStackTrace()
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    throw IOException("Unexpected response! Code $response")
-                } else {
-                    try {
-                        val json = JSONArray(response.body()!!.string())
-                        for (i in 0 until json.length()) {
-                            val jsonObject = json.getJSONObject(i)
-                            artistList.add(
-                                Artist(
-                                    jsonObject.getString("Mbid"),
-                                    jsonObject.getString("Name"),
-                                    jsonObject.getString("Url"),
-                                    jsonObject.getString("PlayCount").toLong(),
-                                    getImages(jsonObject.getJSONArray("Images"))
-                                )
-                            )
-                        }
-                        countDownLatch.countDown()
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        })
-
-        countDownLatch.await()
-        return artistList
-    }
-
-    private fun getImages(jsonImages: JSONArray): MutableMap<String,String> {
+    private fun getImages(jsonImages: JSONArray): Map<String,String> {
         val imagesMap = mutableMapOf<String,String>()
         for (i in 0 until jsonImages.length()) {
             val image = jsonImages.getJSONObject(i)

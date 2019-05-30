@@ -15,10 +15,8 @@ import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.adapters.AlbumAdapter
-import com.projetdev.malo.musichall.adapters.ArtistAdapter
-import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.MainAdapter
+import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.MainRVDecorator
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
@@ -32,8 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var menuFab: FloatingActionMenu
 
-    private lateinit var albumAdapter: AlbumAdapter
-    private lateinit var artistAdapter: ArtistAdapter
+    private lateinit var mainAdapter: MainAdapter
 
     private var initTimer: Boolean = true
     private var isTimerActive: Boolean = false
@@ -60,13 +57,13 @@ class MainActivity : AppCompatActivity() {
 
         val switchSearchButton = findViewById<ImageView>(R.id.switch_search_button)
 
-        albumAdapter = AlbumAdapter(api.search(Constant.RELEASE), this@MainActivity)
+        mainAdapter = MainAdapter(api.search(Constant.BOTH), this)
 
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = albumAdapter
+            adapter = mainAdapter
             addItemDecoration(MainRVDecorator(150))
         }
 
@@ -101,19 +98,10 @@ class MainActivity : AppCompatActivity() {
                     isTimerActive = false
                     initTimer = false
 
-
-                    if(searchMode == Constant.ARTIST) {
-                        val queryList = api.searchForArtists(newText?.replace(" ", "%20"))
-                        handler.post {
-                            artistAdapter.refreshList(queryList)
-                            recyclerView.adapter = artistAdapter
-                        }
-                    } else{
-                        val queryList = api.searchForAlbums(newText?.replace(" ", "%20"))
-                        handler.post {
-                            albumAdapter.refreshList(queryList)
-                            recyclerView.adapter = albumAdapter
-                        }
+                    val queryList = api.search(Constant.BOTH, newText?.replace(" ", "%20"))
+                    handler.post {
+                        mainAdapter.refreshList(queryList)
+                        recyclerView.adapter = mainAdapter
                     }
 
                 }
@@ -126,21 +114,6 @@ class MainActivity : AppCompatActivity() {
 
         val image = view.switch_search_button
         val searchbar = findViewById<SearchView>(R.id.searchAutoComplete)
-
-        if (searchMode == 1) {
-            searchMode = 0
-            image.setImageDrawable(getDrawable(R.drawable.ic_music_note_black_512dp))
-            searchbar.queryHint = "Search for an artist..."
-        } else {
-            searchMode = 1
-            image.setImageDrawable(getDrawable(R.drawable.ic_group_black_512dp))
-            searchbar.queryHint = "Search for a release..."
-        }
-
-        val newList = api.search(searchMode)
-        handler.post {
-            myAdapter.refreshList(newList)
-        }
     }
 
     fun getToCollection(view: View) {

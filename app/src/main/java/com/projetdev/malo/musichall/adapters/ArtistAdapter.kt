@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+/*package com.projetdev.malo.musichall.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -12,9 +12,7 @@ import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.models.Artist
-import com.projetdev.malo.musichall.models.Item
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
 import java.util.ArrayList
 
@@ -34,7 +32,7 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         holder.title.text = items[position].name
-        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("medium")!!))
+        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("extralarge")))
 
         if(MainActivity.searchMode == Constant.ARTIST) {
             //items.containsAll()
@@ -53,7 +51,7 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
         }
 
         Picasso.get()
-            .load(items[position].images?.get("medium")!!)
+            .load(items[position].images?.get("extralarge"))
             .placeholder(R.drawable.ic_image_black_512dp)
             .into(holder.imageView)
 
@@ -76,3 +74,4 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
         notifyDataSetChanged()
     }
 }
+*/
