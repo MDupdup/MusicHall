@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.adapters.main
 
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView

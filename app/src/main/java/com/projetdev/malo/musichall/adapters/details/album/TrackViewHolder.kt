@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.adapters.details.album
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

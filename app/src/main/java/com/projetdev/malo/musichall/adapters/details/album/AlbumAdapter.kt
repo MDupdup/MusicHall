@@ -1,4 +1,4 @@
-/*package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.adapters.details.album/*package com.projetdev.malo.musichall.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -11,13 +11,12 @@ import com.projetdev.malo.musichall.ArtistDetailActivity
 import com.projetdev.malo.musichall.MainActivity
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.models.Artist
 import com.squareup.picasso.Picasso
 
 import java.util.ArrayList
 
-class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, context: Context) :
-    RecyclerView.Adapter<ArtistViewHolder>() {
+class AlbumAdapter internal constructor(private var items: ArrayList<Album>, context: Context) :
+    RecyclerView.Adapter<AlbumViewHolder>() {
 
     private var context: Context
 
@@ -25,14 +24,14 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
         this.context = context
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
 
-        return ArtistViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_main_rv, parent, false))
+        return AlbumViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_main_rv, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         holder.title.text = items[position].name
-        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("extralarge")))
+        holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("medium")!!))
 
         if(MainActivity.searchMode == Constant.ARTIST) {
             //items.containsAll()
@@ -51,7 +50,7 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
         }
 
         Picasso.get()
-            .load(items[position].images?.get("extralarge"))
+            .load(items[position].images.get("extralarge")!!)
             .placeholder(R.drawable.ic_image_black_512dp)
             .into(holder.imageView)
 
@@ -69,7 +68,7 @@ class ArtistAdapter internal constructor(private var items: ArrayList<Artist>, c
         return items.size
     }
 
-    fun refreshList(newList: ArrayList<Artist>) {
+    fun refreshList(newList: ArrayList<Album>) {
         items = newList
         notifyDataSetChanged()
     }

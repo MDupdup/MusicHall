@@ -1,7 +1,6 @@
 package com.projetdev.malo.musichall
 
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
@@ -10,11 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.*
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.adapters.MainRVDecorator
-import com.projetdev.malo.musichall.adapters.TrackAdapter
+import com.projetdev.malo.musichall.adapters.details.album.TrackAdapter
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.models.Album
-import com.projetdev.malo.musichall.models.Artist
 import com.squareup.picasso.Picasso
 
 class AlbumDetailActivity : AppCompatActivity() {
@@ -44,7 +41,10 @@ class AlbumDetailActivity : AppCompatActivity() {
         recyclerView = findViewById<RecyclerView>(R.id.track_list).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
-            adapter = TrackAdapter(album!!.tracks, this@AlbumDetailActivity)
+            adapter = TrackAdapter(
+                album!!.tracks,
+                this@AlbumDetailActivity
+            )
         }
 
 

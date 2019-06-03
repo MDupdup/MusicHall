@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.adapters.details.album
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -12,7 +12,13 @@ class TrackAdapter internal constructor(private var items: ArrayList<Track>, pri
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
 
-        return TrackViewHolder(LayoutInflater.from(context).inflate(R.layout.track_list_item, parent, false))
+        return TrackViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.track_list_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {

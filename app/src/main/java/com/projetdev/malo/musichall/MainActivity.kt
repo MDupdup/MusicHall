@@ -16,9 +16,9 @@ import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.adapters.MainAdapter
+import com.projetdev.malo.musichall.adapters.main.MainAdapter
 import com.projetdev.malo.musichall.api.ApiCall
-import com.projetdev.malo.musichall.adapters.MainRVDecorator
+import com.projetdev.malo.musichall.adapters.main.MainRVDecorator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.lang.Exception

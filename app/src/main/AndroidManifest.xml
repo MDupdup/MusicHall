@@ -22,14 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CollectionActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".CollectionActivity"
+                android:screenOrientation="portrait"
+                android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".ArtistDetailActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".ArtistDetailActivity"
+                android:screenOrientation="portrait"
+                android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".AlbumDetailActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".AlbumDetailActivity"
+                android:screenOrientation="portrait"
+                android:parentActivityName=".MainActivity">
         </activity>
 
     </application>

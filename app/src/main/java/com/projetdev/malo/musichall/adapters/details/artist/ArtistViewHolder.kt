@@ -1,10 +1,10 @@
-package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.adapters.details.artist
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.row_list_main_rv.view.*
 
-class AlbumViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class ArtistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val row = view.search_row
     val title = view.search_textview_title
     val imageView = view.search_imageview
