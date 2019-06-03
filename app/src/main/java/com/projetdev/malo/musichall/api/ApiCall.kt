@@ -161,7 +161,7 @@ class ApiCall(private val url: String) {
                         json.getString("Summup"),
                         json.getString("Content"),
                         albums,
-                        getTags(json.getJSONArray("Tags"))
+                        null//getTags(json.getJSONArray("Tags"))
                     )
 
                     countDownLatch.countDown()

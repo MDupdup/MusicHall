@@ -47,8 +47,7 @@ class AlbumDetailActivity : AppCompatActivity() {
             )
         }
 
-
-        val tagsView: LinearLayout = findViewById(R.id.taglist)
+        val tagsView = findViewById<LinearLayout>(R.id.album_taglist)
 
         for (tag in album?.tags!!) {
             val tagView = TextView(this@AlbumDetailActivity)

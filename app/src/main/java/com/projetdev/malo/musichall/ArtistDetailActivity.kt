@@ -1,9 +1,12 @@
 package com.projetdev.malo.musichall
 
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
@@ -29,5 +32,18 @@ class ArtistDetailActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.artist_detail_title).text = artist.name
         findViewById<TextView>(R.id.artist_detail_desc).text  = artist.summup
+
+        /*val tagsView = findViewById<LinearLayout>(R.id.artist_taglist)
+
+        for (tag in artist.tags!!) {
+            val tagView = TextView(this@ArtistDetailActivity)
+            tagView.text = tag
+            tagView.setTextColor(Color.WHITE)
+            tagView.textSize = 13f
+            tagView.setBackgroundResource(R.drawable.style_tag)
+            ViewCompat.setElevation(tagView, 5f)
+
+            tagsView.addView(tagView)
+        }*/
     }
 }

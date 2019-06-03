@@ -19,6 +19,18 @@
             android:scaleType="centerCrop"
             android:contentDescription="@string/detail_image_content_desc"/>
 
+    <LinearLayout
+            android:id="@+id/artist_taglist"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            app:layout_constraintBottom_toTopOf="@id/relativeLayout">
+
+    </LinearLayout>
+
     <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_edit"
             android:layout_width="wrap_content"

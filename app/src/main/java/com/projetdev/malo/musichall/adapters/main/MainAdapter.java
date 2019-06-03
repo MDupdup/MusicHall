@@ -1,12 +1,16 @@
 package com.projetdev.malo.musichall.adapters.main;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import com.projetdev.malo.musichall.AlbumDetailActivity;
 import com.projetdev.malo.musichall.ArtistDetailActivity;
+import com.projetdev.malo.musichall.MainActivity;
 import com.projetdev.malo.musichall.R;
 import com.projetdev.malo.musichall.Utils.Activitutils;
 import com.projetdev.malo.musichall.models.Album;
@@ -57,9 +61,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainViewHolder> {
         holder.row.setOnClickListener(v -> {
             Class detail = items.get(position) instanceof Album ? AlbumDetailActivity.class : ArtistDetailActivity.class;
             Intent intent = new Intent(context, detail);
+
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, (View) holder.search_image, "background_image");
             intent.putExtra("id", items.get(position).getId());
 
-            context.startActivity(intent);
+            context.startActivity(intent, options.toBundle());
         });
     }
 
