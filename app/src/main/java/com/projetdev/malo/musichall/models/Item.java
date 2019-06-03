@@ -8,6 +8,9 @@ public abstract class Item {
     private String name;
     private String url;
     private Map<String,String> images;
+    private int year;
+    private Artist artist;
+    private String playCount;
 
     Item(String name) {
         this.name = name;
@@ -18,6 +21,23 @@ public abstract class Item {
         this.name = name;
         this.url = url;
         this.images = images;
+    }
+
+    Item(String id, String name, String url, Map<String,String> images, String playCount) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.images = images;
+        this.playCount = playCount;
+    }
+
+    Item(String id, String name, String url, Map<String,String> images, Integer year, Artist artist) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.images = images;
+        this.year = year;
+        this.artist = artist;
     }
 
     Item(String name, Map<String, String> images) {
@@ -55,5 +75,29 @@ public abstract class Item {
 
     public void setImages(Map<String, String> images) {
         this.images = images;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
+    public String getPlayCount() {
+        return playCount;
+    }
+
+    public void setPlayCount(String playCount) {
+        this.playCount = playCount;
     }
 }

@@ -37,6 +37,7 @@
             android:onClick="switchSearch"
             android:elevation="6dp" >
     </Button>-->
+
     <ImageView
             android:id="@+id/switch_search_button"
             android:layout_width="45dp"
@@ -50,8 +51,7 @@
             android:onClick="switchSearch"
             android:elevation="5dp"
             android:background="@drawable/searchbar"
-            android:src="@drawable/ic_group_black_512dp"
-    />
+            android:src="@drawable/ic_filter_list_black_128dp" />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

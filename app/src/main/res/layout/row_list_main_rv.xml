@@ -34,19 +34,31 @@
                 android:maxLines="1"
                 android:ellipsize="end"
 
+                android:textStyle="bold"
                 android:text="@string/search_textview_value"
                 android:textSize="@dimen/search_title_size"
                 android:textColor="@android:color/black"/>
 
-<!--        <TextView
-                android:id="@+id/search_textview_subtitle"
+        <!--        <TextView
+                        android:id="@+id/search_textview_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+
+                        android:text="@string/search_textview_subtitle"
+                        android:textSize="@dimen/search_subtitle_size"
+                        android:textColor="@android:color/black"/>-->
+
+        <TextView
+                android:id="@+id/search_textview_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
 
-                android:text="@string/search_textview_subtitle"
-                android:textSize="@dimen/search_subtitle_size"
-                android:textColor="@android:color/black"/>-->
+                android:text="@string/search_textview_artistfield"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
 
         <TextView
                 android:id="@+id/search_textview_year"
@@ -59,16 +71,6 @@
                 android:textStyle="italic"
                 android:textSize="18sp"/>
 
-        <LinearLayout
-                android:id="@+id/taglist"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-
-        </LinearLayout>
-
     </LinearLayout>
-
 
 </LinearLayout>

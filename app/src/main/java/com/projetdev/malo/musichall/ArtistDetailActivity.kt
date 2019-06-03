@@ -24,10 +24,10 @@ class ArtistDetailActivity : AppCompatActivity() {
         val artist: Artist? = api.getArtist(data.getStringExtra("id"))
 
         Picasso.get()
-            .load(data.getStringExtra("thumb"))
+            .load(artist!!.images["large"])
             .into(findViewById<ImageView>(R.id.cover_image))
 
-        findViewById<TextView>(R.id.artist_detail_title).text = artist?.name
-        findViewById<TextView>(R.id.artist_detail_desc).text  = artist?.summup
+        findViewById<TextView>(R.id.artist_detail_title).text = artist.name
+        findViewById<TextView>(R.id.artist_detail_desc).text  = artist.summup
     }
 }

@@ -1,6 +1,5 @@
 package com.projetdev.malo.musichall.models;
 
-import android.util.ArrayMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,12 +16,13 @@ public class Artist extends Item {
     private ArrayList<Artist> similar;
     private String summup;
     private String content;
+    private ArrayList<Album> albums;
+    private ArrayList<String> tags;
 
 
     public Artist(String name) {
         super(name, new HashMap<>());
         this.name = name;
-
     }
 
     public Artist(String name, Map<String,String> images) {
@@ -32,12 +32,16 @@ public class Artist extends Item {
     }
 
     public Artist(String id, String name, String url, String playCount, Map<String, String> images) {
-        super(id, name, url, images);
+        super(id, name, url, images, playCount);
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.images = images;
         this.playCount = playCount;
     }
 
-    public Artist(String id, String name, String url, Map<String, String> images, String playCount, Boolean isOnTour, ArrayList<Artist> similar, String summup, String content) {
-        super(id, name, url, images);
+    public Artist(String id, String name, String url, Map<String, String> images, String playCount, Boolean isOnTour, ArrayList<Artist> similar, String summup, String content, ArrayList<Album> albums, ArrayList<String> tags) {
+        super(id, name, url, images, playCount);
         this.id = id;
         this.name = name;
         this.url = url;
@@ -47,6 +51,8 @@ public class Artist extends Item {
         this.similar = similar;
         this.summup = summup;
         this.content = content;
+        this.albums = albums;
+        this.tags = tags;
     }
 
     @Override
@@ -127,5 +133,21 @@ public class Artist extends Item {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public ArrayList<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(ArrayList<Album> albums) {
+        this.albums = albums;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 }

@@ -28,6 +28,9 @@
         <activity android:name=".ArtistDetailActivity"
                   android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".AlbumDetailActivity"
+                  android:screenOrientation="portrait">
+        </activity>
 
     </application>
 

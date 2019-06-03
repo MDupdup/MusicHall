@@ -9,6 +9,4 @@ class AlbumViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val title = view.search_textview_title
     val imageView = view.search_imageview
     val year = view.search_textview_year
-    //val subtitle = view.search_textview_subtitle
-    val taglist = view.taglist
 }

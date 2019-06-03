@@ -10,6 +10,7 @@ public class Album extends Item {
     private String id;
     private String name;
     private String url;
+    private int year;
     private Artist artist;
     private Map<String,String> images;
     private ArrayList<Track> tracks;
@@ -17,20 +18,30 @@ public class Album extends Item {
     private String summup;
     private String content;
 
-    public Album(String id, String name, String url, Artist artist, Map<String, String> images) {
+    public Album(String id, String name, String url, Map<String, String> images) {
         super(id, name, url, images);
         this.id = id;
         this.name = name;
         this.url = url;
+        this.images = images;
+    }
+
+    public Album(String id, String name, String url, Integer year, Artist artist, Map<String, String> images) {
+        super(id, name, url, images, year, artist);
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.year = year;
         this.artist = artist;
         this.images = images;
     }
 
-    public Album(String id, String name, String url, Artist artist, Map<String, String> images, ArrayList<Track> tracks, ArrayList<String> tags, String summup, String content) {
-        super(id, name, url, images);
+    public Album(String id, String name, String url, Integer year, Artist artist, Map<String, String> images, ArrayList<Track> tracks, ArrayList<String> tags, String summup, String content) {
+        super(id, name, url, images, year, artist);
         this.id = id;
         this.name = name;
         this.url = url;
+        this.year = year;
         this.artist = artist;
         this.images = images;
         this.tracks = tracks;
@@ -67,6 +78,14 @@ public class Album extends Item {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public Artist getArtist() {

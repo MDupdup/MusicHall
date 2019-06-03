@@ -11,10 +11,11 @@ import java.io.IOException
 import java.lang.Integer.parseInt
 import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
+import kotlin.random.Random
 
 class ApiCall(private val url: String) {
 
-    fun getAlbum(id: Int): Album? {
+    fun getAlbum(id: String): Album? {
         var album: Album? = null
 
         val req = Request.Builder()
@@ -39,39 +40,33 @@ class ApiCall(private val url: String) {
 
                         // Get full track list
                         val trackList = ArrayList<Track>();
-                        val jsonTrackList = json.getJSONArray("tracklist")
+                        val jsonTrackList = json.getJSONArray("Tracks")
                         for (j in 0 until jsonTrackList.length()) {
                             val jsonObject = jsonTrackList.getJSONObject(j)
+
+                            val position =
+                                if (jsonObject.getString("Position") == "") (j + 1).toString() else jsonObject.getString(
+                                    "Position"
+                                )
                             trackList.add(
                                 Track(
-                                    jsonObject.getString("title"),
-                                    jsonObject.getString("url"),
-                                    jsonObject.getInt("position"),
-                                    timeToInt(jsonObject.getString("duration"))
-                                )
-                            )
-                        }
-
-                        // Get full track list
-                        val artistList = ArrayList<Artist>();
-                        val jsonArtistList = json.getJSONArray("artists")
-                        for (i in 0 until jsonArtistList.length()) {
-                            val jsonObject = jsonArtistList.getJSONObject(i)
-                            artistList.add(
-                                Artist(
-                                    jsonObject.getString("name")
+                                    jsonObject.getString("Name"),
+                                    jsonObject.getString("Url"),
+                                    position,
+                                    parseInt(jsonObject.getString("Duration"))
                                 )
                             )
                         }
 
                         val tags = ArrayList<String>()
                         val jsonTags = json.getJSONArray("Tags")
-                        for(i in 0 until jsonTags.length()) tags.add(jsonTags.getString(i))
+                        for (i in 0 until jsonTags.length()) tags.add(jsonTags.getString(i))
 
                         album = Album(
                             json.getString("Mbid"),
                             json.getString("Name"),
                             json.getString("Url"),
+                            getYear(),
                             Artist(json.getString("Artist")),
                             getImages(json.getJSONArray("Images")),
                             trackList,
@@ -118,10 +113,41 @@ class ApiCall(private val url: String) {
                     for (i in 0 until jsonSimilarArtists.length()) {
                         val similarArtist = jsonSimilarArtists.getJSONObject(i)
 
-                        similarArtists.add(Artist(
-                            similarArtist.getString("Name"),
-                            getImages(similarArtist.getJSONArray("Images"))
-                        ))
+                        similarArtists.add(
+                            Artist(
+                                similarArtist.getString("Name"),
+                                getImages(similarArtist.getJSONArray("Images"))
+                            )
+                        )
+                    }
+
+                    // Get albums
+                    val albums = ArrayList<Album>()
+                    val jsonAlbums = json.getJSONArray("Albums")
+                    for (i in 0 until jsonSimilarArtists.length()) {
+                        val album = jsonAlbums.getJSONObject(i)
+
+                        albums.add(
+                            Album(
+                                album.getString("Name"),
+                                album.getString("Mbid"),
+                                album.getString("Url"),
+                                getImages(album.getJSONArray("Images"))
+                            )
+                        )
+                    }
+
+                    for (i in 0 until jsonSimilarArtists.length()) {
+                        val album = jsonAlbums.getJSONObject(i)
+
+                        albums.add(
+                            Album(
+                                album.getString("Name"),
+                                album.getString("Mbid"),
+                                album.getString("Url"),
+                                getImages(album.getJSONArray("Images"))
+                            )
+                        )
                     }
 
                     artist = Artist(
@@ -133,7 +159,9 @@ class ApiCall(private val url: String) {
                         json.getBoolean("IsOnTour"),
                         similarArtists,
                         json.getString("Summup"),
-                        json.getString("Content")
+                        json.getString("Content"),
+                        albums,
+                        getTags(json.getJSONArray("Tags"))
                     )
 
                     countDownLatch.countDown()
@@ -156,7 +184,7 @@ class ApiCall(private val url: String) {
     private fun justSearchFfs(value: String? = ""): ArrayList<Item> {
         val wholeSearchList = ArrayList<Item>()
 
-        wholeSearchList.addAll(searchForArtists(value))
+        //wholeSearchList.addAll(searchForArtists(value))
         wholeSearchList.addAll(searchForAlbums(value))
 
         //wholeSearchList.shuffle()
@@ -175,12 +203,12 @@ class ApiCall(private val url: String) {
             .url(this.url + "/search/artist/" + value)
             .build()
 
-            val countDownLatch = CountDownLatch(1)
-            getClient()?.newCall(req)?.enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.e("ERR", "Excuse me what the fuck")
-                    e.printStackTrace()
-                }
+        val countDownLatch = CountDownLatch(1)
+        getClient()?.newCall(req)?.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("ERR", "Excuse me what the fuck")
+                e.printStackTrace()
+            }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
@@ -248,6 +276,7 @@ class ApiCall(private val url: String) {
                                     jsonObject.getString("Mbid"),
                                     jsonObject.getString("Name"),
                                     jsonObject.getString("Url"),
+                                    getYear(),
                                     Artist(jsonObject.getString("Artist")),
                                     getImages(jsonObject.getJSONArray("Images"))
                                 )
@@ -264,8 +293,8 @@ class ApiCall(private val url: String) {
         return discList
     }
 
-    private fun getImages(jsonImages: JSONArray): Map<String,String> {
-        val imagesMap = mutableMapOf<String,String>()
+    private fun getImages(jsonImages: JSONArray): Map<String, String> {
+        val imagesMap = mutableMapOf<String, String>()
         for (i in 0 until jsonImages.length()) {
             val image = jsonImages.getJSONObject(i)
             imagesMap.put(image.getString("Size"), image.getString("Url"))
@@ -274,8 +303,21 @@ class ApiCall(private val url: String) {
         return imagesMap
     }
 
-    private fun parseYear(year: String): Int {
-        return if (year == "") 0 else parseInt(year)
+    private fun getTags(jsonTags: JSONArray): ArrayList<String> {
+        val unwantedTags = arrayListOf("albums I own", "favourite albums")
+
+        val tags = arrayListOf<String>()
+        for (i in 0 until jsonTags.length()) {
+            val tag = jsonTags.getJSONObject(i)
+            if (tag.getString("Name") !in unwantedTags)
+                tags[i] = tag.getString("Name")
+        }
+
+        return tags
+    }
+
+    private fun getYear(): Int {
+        return Random.nextInt(1970, 2020)
     }
 
     private fun parseReleaseTitle(title: String): Pair<String, String> {
