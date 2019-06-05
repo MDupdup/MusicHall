@@ -1,5 +1,6 @@
 package com.projetdev.malo.musichall
 
+import android.app.ActionBar
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
@@ -47,10 +48,11 @@ class AlbumDetailActivity : AppCompatActivity() {
             )
         }
 
-        val tagsView = findViewById<LinearLayout>(R.id.album_taglist)
+        val tagsView: LinearLayout = findViewById(R.id.album_taglist)
 
         for (tag in album?.tags!!) {
             val tagView = TextView(this@AlbumDetailActivity)
+            tagView.setPadding(5,5,5,5)
             tagView.text = tag
             tagView.setTextColor(Color.WHITE)
             tagView.textSize = 13f

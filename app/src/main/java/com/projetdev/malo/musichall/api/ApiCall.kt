@@ -60,7 +60,10 @@ class ApiCall(private val url: String) {
 
                         val tags = ArrayList<String>()
                         val jsonTags = json.getJSONArray("Tags")
-                        for (i in 0 until jsonTags.length()) tags.add(jsonTags.getString(i))
+                        for (i in 0 until jsonTags.length()) {
+                            if (jsonTags.getString(i) in unwantedTags) continue
+                            tags.add(jsonTags.getString(i))
+                        }
 
                         album = Album(
                             json.getString("Mbid"),
@@ -304,7 +307,6 @@ class ApiCall(private val url: String) {
     }
 
     private fun getTags(jsonTags: JSONArray): ArrayList<String> {
-        val unwantedTags = arrayListOf("albums I own", "favourite albums")
 
         val tags = arrayListOf<String>()
         for (i in 0 until jsonTags.length()) {
@@ -343,6 +345,8 @@ class ApiCall(private val url: String) {
     }
 
     companion object {
+
+        private val unwantedTags = arrayListOf("albums I own", "favourite albums", "favorite albums")
 
         private var client: OkHttpClient? = OkHttpClient()
 

@@ -20,7 +20,7 @@
             android:contentDescription="@string/detail_image_content_desc"/>
 
     <LinearLayout
-            android:id="@+id/artist_taglist"
+            android:id="@+id/album_taglist"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:orientation="horizontal"
