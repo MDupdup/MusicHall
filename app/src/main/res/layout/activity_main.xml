@@ -26,6 +26,19 @@
 
     </android.support.v7.widget.SearchView>
 
+
+    <ProgressBar
+            android:id="@+id/search_loading"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:elevation="5dp"
+
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/searchAutoComplete"
+            app:layout_constraintBottom_toBottomOf="@+id/searchAutoComplete"
+            app:layout_constraintTop_toTopOf="@+id/searchAutoComplete">
+    </ProgressBar>
 <!--    <Button
             android:layout_width="50dp"
             android:layout_height="50dp"

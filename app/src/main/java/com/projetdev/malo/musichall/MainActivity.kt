@@ -1,5 +1,6 @@
 package com.projetdev.malo.musichall
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.View
 import android.support.v7.widget.SearchView
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
@@ -121,6 +123,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
+        // Loading Progress Bar
+        val searchLoading: ProgressBar = findViewById(R.id.search_loading)
+        searchLoading.visibility = View.GONE
+
         // Search Bar Initialization
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -136,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
                 timer = Timer("SearchApi", false).schedule(300) {
 
-
+                    searchLoading.visibility = View.VISIBLE
                     if (isTimerActive) {
                         timer.cancel()
                     }
@@ -145,6 +152,7 @@ class MainActivity : AppCompatActivity() {
 
                     val queryList = api.search(searchMode, newText?.replace(" ", "%20"))
                     handler.post {
+                        //(MainActivity::class as Activity).findViewById<ProgressBar>(R.id.search_loading).visibility = View.GONE
                         mainAdapter.refreshList(queryList)
                         recyclerView.adapter = mainAdapter
                     }
@@ -165,11 +173,5 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, CollectionActivity::class.java)
 
         startActivity(intent)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        super.onSaveInstanceState(outState, outPersistentState)
-
-        //TODO: Implement saveInstanceState!
     }
 }

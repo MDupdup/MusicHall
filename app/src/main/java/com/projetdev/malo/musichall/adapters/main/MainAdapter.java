@@ -62,7 +62,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainViewHolder> {
             Class detail = items.get(position) instanceof Album ? AlbumDetailActivity.class : ArtistDetailActivity.class;
             Intent intent = new Intent(context, detail);
 
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, (View) holder.search_image, "background_image");
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.search_image, "background_image");
             intent.putExtra("id", items.get(position).getId());
 
             context.startActivity(intent, options.toBundle());

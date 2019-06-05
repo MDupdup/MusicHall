@@ -13,8 +13,10 @@ import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
 
+
 class ApiCall(private val url: String) {
 
+    @Throws(IOException::class)
     fun getAlbum(id: String): Album? {
         var album: Album? = null
 
@@ -89,6 +91,7 @@ class ApiCall(private val url: String) {
         return album
     }
 
+    @Throws(IOException::class)
     fun getArtist(id: String): Artist? {
         var artist: Artist? = null
 
@@ -104,6 +107,7 @@ class ApiCall(private val url: String) {
                 e.printStackTrace()
             }
 
+            @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
                     throw IOException("Unexpected response! Code $response")
@@ -295,6 +299,12 @@ class ApiCall(private val url: String) {
         countDownLatch.await()
         return discList
     }
+
+
+    fun insertIntoDB() {
+
+    }
+
 
     private fun getImages(jsonImages: JSONArray): Map<String, String> {
         val imagesMap = mutableMapOf<String, String>()
