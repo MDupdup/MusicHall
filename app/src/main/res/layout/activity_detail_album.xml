@@ -44,6 +44,9 @@
             fab:fab_shadowColor="#000"
             android:elevation="6dp"
             fab:fab_elevationCompat="6dp"
+
+            android:onClick="addToFavorites"
+
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="28dp"
             app:layout_constraintEnd_toEndOf="parent"/>

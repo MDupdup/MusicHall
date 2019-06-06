@@ -1,19 +1,15 @@
 package com.projetdev.malo.musichall
 
-import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.os.PersistableBundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.support.v7.widget.SearchView
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.ProgressBar
+import android.widget.*
 import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
@@ -22,10 +18,10 @@ import com.projetdev.malo.musichall.adapters.main.MainAdapter
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.main.MainRVDecorator
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -94,14 +90,20 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.filter_both_option -> {
                         searchMode = Constant.BOTH
+                        findViewById<ImageView>(R.id.background_soshoko_img).setImageResource(R.drawable.ic_music_note_black_512dp)
+                        findViewById<TextView>(R.id.background_soshoko_txt).text = "Search for albums or artists!"
                         true
                     }
                     R.id.filter_artist_only_option -> {
                         searchMode = Constant.ARTIST
+                        findViewById<ImageView>(R.id.background_soshoko_img).setImageResource(R.drawable.ic_group_black_512dp)
+                        findViewById<TextView>(R.id.background_soshoko_txt).text = "Search for artists!"
                         true
                     }
                     R.id.filter_album_only_option -> {
                         searchMode = Constant.ALBUM
+                        findViewById<ImageView>(R.id.background_soshoko_img).setImageResource(R.drawable.ic_album_black_256dp)
+                        findViewById<TextView>(R.id.background_soshoko_txt).text = "Search for albums!"
                         true
                     }
                     else -> false
@@ -128,6 +130,14 @@ class MainActivity : AppCompatActivity() {
         val searchLoading: ProgressBar = findViewById(R.id.search_loading)
         searchLoading.visibility = View.GONE
 
+
+        // Loading Background
+        val backgroundLayout = findViewById<LinearLayout>(R.id.background_soshoko)
+        val backgroundImg = findViewById<ImageView>(R.id.background_soshoko_img)
+        val backgroundTxt = findViewById<TextView>(R.id.background_soshoko_txt)
+        backgroundImg.setImageResource(R.drawable.ic_music_note_black_512dp)
+        backgroundTxt.text = "Search for albums or artists!"
+
         // Search Bar Initialization
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -143,7 +153,11 @@ class MainActivity : AppCompatActivity() {
 
                 timer = Timer("SearchApi", false).schedule(300) {
 
-                    searchLoading.visibility = View.VISIBLE
+                    runOnUiThread {
+                        searchLoading.visibility = View.VISIBLE
+                        backgroundLayout.visibility = View.GONE
+                    }
+
                     if (isTimerActive) {
                         timer.cancel()
                     }
@@ -152,21 +166,18 @@ class MainActivity : AppCompatActivity() {
 
                     val queryList = api.search(searchMode, newText?.replace(" ", "%20"))
                     handler.post {
-                        //(MainActivity::class as Activity).findViewById<ProgressBar>(R.id.search_loading).visibility = View.GONE
                         mainAdapter.refreshList(queryList)
                         recyclerView.adapter = mainAdapter
-                    }
 
+                        runOnUiThread {
+                            searchLoading.visibility = View.GONE
+                            if (newText!! == "") backgroundLayout.visibility = View.VISIBLE
+                        }
+                    }
                 }
                 return true
             }
         })
-    }
-
-    fun switchSearch(view: View) {
-
-        val image = view.switch_search_button
-        val searchbar = findViewById<SearchView>(R.id.searchAutoComplete)
     }
 
     fun getToCollection(view: View) {

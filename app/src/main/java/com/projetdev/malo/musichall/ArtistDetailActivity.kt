@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.projetdev.malo.musichall.Utils.Constant
@@ -18,6 +19,8 @@ class ArtistDetailActivity : AppCompatActivity() {
 
     val api: ApiCall = ApiCall(Constant.ADDRESS)
 
+    lateinit var artist: Artist
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_artist)
@@ -26,7 +29,7 @@ class ArtistDetailActivity : AppCompatActivity() {
         val data = intent
 
         try {
-            val artist: Artist? = api.getArtist(data.getStringExtra("id"))
+            artist = api.getArtist(data.getStringExtra("id"))!!
 
             Picasso.get()
                 .load(artist!!.images["large"])
@@ -52,6 +55,10 @@ class ArtistDetailActivity : AppCompatActivity() {
             finishAfterTransition()
         }
 
+    }
+
+    fun addToFavorites(v: View) {
+        api.insertArtist(artist)
     }
 
     override fun onBackPressed() {

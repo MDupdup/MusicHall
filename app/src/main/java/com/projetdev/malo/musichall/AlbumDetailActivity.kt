@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.adapters.details.album.TrackAdapter
@@ -21,6 +22,8 @@ class AlbumDetailActivity : AppCompatActivity() {
 
     private val api: ApiCall = ApiCall(Constant.ADDRESS)
 
+    private lateinit var album: Album
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
 
@@ -31,7 +34,7 @@ class AlbumDetailActivity : AppCompatActivity() {
         val data = intent
 
         try {
-            val album: Album? = api.getAlbum(data.getStringExtra("id"))
+            album = api.getAlbum(data.getStringExtra("id"))!!
 
             Picasso.get()
                 .load(data.getStringExtra("large"))
@@ -69,6 +72,10 @@ class AlbumDetailActivity : AppCompatActivity() {
         }
     }
 
+
+    fun addToFavorites(v: View) {
+        api.insertAlbum(album)
+    }
 
     override fun onBackPressed() {
             super.onBackPressed()
