@@ -40,22 +40,22 @@ class AlbumDetailActivity : AppCompatActivity() {
                 .load(data.getStringExtra("large"))
                 .into(findViewById<ImageView>(R.id.cover_image))
 
-            findViewById<TextView>(R.id.artist_detail_title).text = album?.name
-            findViewById<TextView>(R.id.artist_detail_desc).text = album?.summup
+            findViewById<TextView>(R.id.artist_detail_title).text = album.name
+            findViewById<TextView>(R.id.artist_detail_desc).text = album.summup
 
             viewManager = LinearLayoutManager(this)
             recyclerView = findViewById<RecyclerView>(R.id.track_list).apply {
                 setHasFixedSize(true)
                 layoutManager = viewManager
                 adapter = TrackAdapter(
-                    album!!.tracks,
+                    album.tracks,
                     this@AlbumDetailActivity
                 )
             }
 
             val tagsView: LinearLayout = findViewById(R.id.album_taglist)
 
-            for (tag in album?.tags!!) {
+            for (tag in album.tags!!) {
                 val tagView = TextView(this@AlbumDetailActivity)
                 tagView.setPadding(5, 5, 5, 5)
                 tagView.text = tag
@@ -78,14 +78,14 @@ class AlbumDetailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-            super.onBackPressed()
-            finishAfterTransition()
-        }
-
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                android.R.id.home -> finishAfterTransition()
-            }
-            return true
-        }
+        super.onBackPressed()
+        finishAfterTransition()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finishAfterTransition()
+        }
+        return true
+    }
+}

@@ -1,6 +1,7 @@
 package com.projetdev.malo.musichall.api
 
 import android.util.Log
+import com.google.gson.*
 import com.projetdev.malo.musichall.models.*
 import okhttp3.*
 import org.json.JSONArray
@@ -14,12 +15,7 @@ import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
 import okhttp3.RequestBody
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
-
-
 
 
 class ApiCall(private val url: String) {
@@ -299,13 +295,44 @@ class ApiCall(private val url: String) {
     fun insertArtist(artist: Artist) {
         val gson = GsonBuilder().setPrettyPrinting().create()
 
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(artist))
+        val obj: JsonObject = Gson().fromJson(gson.toJson(artist), JsonElement::class.java).asJsonObject
+
+        val imagesArray = arrayListOf<String>("small", "medium", "large", "extralarge", "mega", "")
+        val newArray = JsonArray()
+        for (i in 0 until artist.images.size) {
+            val newImage = JsonObject()
+            newImage.addProperty("Url", artist.images[imagesArray[i]])
+            newImage.addProperty("Size", imagesArray[i])
+            newArray.add(newImage)
+        }
+        obj.add("images", newArray)
+
+        val albumImagesArray = arrayListOf<String>("small", "medium", "large", "extralarge", "mega", "")
+        val newAlbumArray = JsonArray()
+        for (i in 0 until artist.albums.size) {
+            val newImageArray = JsonArray()
+            for (j in 0 until artist.albums[i].images.size) {
+                val newImage = JsonObject()
+                newImage.addProperty("Url", artist.albums[i].images[albumImagesArray[j]])
+                newImage.addProperty("Size", albumImagesArray[j])
+                newImageArray.add(newImage)
+            }
+            val album = Gson().fromJson(gson.toJson(artist.albums[i]), JsonElement::class.java).asJsonObject
+            album.add("images", newImageArray)
+
+            newAlbumArray.add(album)
+        }
+        obj.add("albums", newAlbumArray)
+
+        System.out.println("json " + gson.toJson(artist))
+
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString())
         val request = Request.Builder()
             .url(this.url + "/favorites/add/artist")
             .post(body)
             .build()
-
-        getClient()?.newCall(request)?.enqueue(object: Callback {
+        getClient()?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERROR", "Excuse me what the fuck", e)
             }
@@ -319,9 +346,22 @@ class ApiCall(private val url: String) {
     fun insertAlbum(album: Album) {
         val gson = GsonBuilder().setPrettyPrinting().create()
 
-        var el: JsonElement = Gson().fromJson(gson.toJson(album), JsonElement::class.java)
+        val obj: JsonObject = Gson().fromJson(gson.toJson(album), JsonElement::class.java).asJsonObject
 
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"))
+        val imagesArray = arrayListOf<String>("small", "medium", "large", "extralarge", "mega", "")
+        val newArray: JsonArray? = JsonArray()
+        for (i in 0 until album.images.size) {
+            val newImage = JsonObject()
+            newImage.addProperty("Url", album.images[imagesArray[i]])
+            newImage.addProperty("Size", imagesArray[i])
+            newArray?.add(newImage)
+        }
+        obj.add("images", newArray)
+        obj.addProperty("artist", album.artist.name)
+
+        System.out.println("json " + gson.toJson(album))
+
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj.toString())
         val request = Request.Builder()
             .url(this.url + "/favorites/add/album")
             .post(body)
@@ -409,19 +449,21 @@ class ApiCall(private val url: String) {
                                 )
                             }
 
-                            artistCollection.add(Artist(
-                                obj.getString("Mbid"),
-                                obj.getString("Name"),
-                                obj.getString("Url"),
-                                getImages(obj.getJSONArray("Images")),
-                                obj.getString("PlayCount"),
-                                obj.getBoolean("IsOnTour"),
-                                similarArtists,
-                                obj.getString("Summup"),
-                                obj.getString("Content"),
-                                albums,
-                                null//getTags(json.getJSONArray("Tags"))
-                            ))
+                            artistCollection.add(
+                                Artist(
+                                    obj.getString("Mbid"),
+                                    obj.getString("Name"),
+                                    obj.getString("Url"),
+                                    getImages(obj.getJSONArray("Images")),
+                                    obj.getString("PlayCount"),
+                                    obj.getBoolean("IsOnTour"),
+                                    similarArtists,
+                                    obj.getString("Summup"),
+                                    obj.getString("Content"),
+                                    albums,
+                                    null//getTags(json.getJSONArray("Tags"))
+                                )
+                            )
 
                             countDownLatch.countDown()
                         }
@@ -495,18 +537,20 @@ class ApiCall(private val url: String) {
                                 tags.add(jsonTags.getString(i))
                             }
 
-                            albumCollection.add(Album(
-                                obj.getString("Mbid"),
-                                obj.getString("Name"),
-                                obj.getString("Url"),
-                                getYear(),
-                                Artist(obj.getString("Artist")),
-                                getImages(obj.getJSONArray("Images")),
-                                trackList,
-                                tags,
-                                obj.getString("Summup"),
-                                obj.getString("Content")
-                            ))
+                            albumCollection.add(
+                                Album(
+                                    obj.getString("Mbid"),
+                                    obj.getString("Name"),
+                                    obj.getString("Url"),
+                                    getYear(),
+                                    Artist(obj.getString("Artist")),
+                                    getImages(obj.getJSONArray("Images")),
+                                    trackList,
+                                    tags,
+                                    obj.getString("Summup"),
+                                    obj.getString("Content")
+                                )
+                            )
                         }
 
                         countDownLatch.countDown()
