@@ -38,7 +38,7 @@ class AlbumDetailActivity : AppCompatActivity() {
 
             Picasso.get()
                 .load(data.getStringExtra("large"))
-                .into(findViewById<ImageView>(R.id.cover_image))
+                .into(findViewById<ImageView>(R.id.album_cover_image))
 
             findViewById<TextView>(R.id.artist_detail_title).text = album.name
             findViewById<TextView>(R.id.artist_detail_desc).text = album.summup
@@ -75,6 +75,8 @@ class AlbumDetailActivity : AppCompatActivity() {
 
     fun addToFavorites(v: View) {
         api.insertAlbum(album)
+        findViewById<ImageView>(R.id.album_add_favs).setImageResource(R.drawable.ic_star_white_36dp)
+
     }
 
     override fun onBackPressed() {

@@ -19,7 +19,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
 
-            app:queryHint="Search for an album..."
+            app:queryHint="Type something!"
             app:iconifiedByDefault="false"
             android:elevation="5dp"
             android:background="@drawable/searchbar">
@@ -96,7 +96,6 @@
             android:layout_marginRight="10dp"
 
 
-            android:onClick="switchSearch"
             android:elevation="5dp"
             android:background="@drawable/searchbar"
             android:src="@drawable/ic_filter_list_black_128dp" />

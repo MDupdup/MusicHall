@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
     <ImageView
-            android:id="@+id/cover_image"
+            android:id="@+id/album_cover_image"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,11 +32,11 @@
     </LinearLayout>
 
     <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_edit"
+            android:id="@+id/album_add_favs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="145dp"
-            android:src="@drawable/ic_star_white_36dp"
+            android:src="@drawable/ic_star_border_white_36dp"
             fab:fab_size="normal"
             fab:fab_colorNormal="#F50057"
             fab:fab_colorPressed="#E8004A"

@@ -4,14 +4,14 @@
               android:layout_width="match_parent"
               android:layout_height="@dimen/search_recyclerview_item_height"
               tools:ignore="UseCompoundDrawables"
-              android:id="@+id/search_row"
+              android:id="@+id/artist_collection_row"
 
               android:elevation="3dp"
               android:layout_margin="4dp"
               android:background="@drawable/card">
 
     <ImageView
-            android:id="@+id/search_imageview"
+            android:id="@+id/artist_collection_image"
             android:layout_width="@dimen/image_size"
             android:layout_height="@dimen/image_size"
             android:layout_marginStart="@dimen/image_margin"
@@ -21,7 +21,7 @@
             android:contentDescription="@string/image_content_desc"/>
 
     <TextView
-            android:id="@+id/search_textview_title"
+            android:id="@+id/artist_collection_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"

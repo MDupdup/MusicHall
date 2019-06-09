@@ -4,38 +4,32 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.projetdev.malo.musichall.R
+import com.projetdev.malo.musichall.Utils.Constant
+import com.projetdev.malo.musichall.adapters.details.album.AlbumAdapter
+import com.projetdev.malo.musichall.adapters.main.MainRVDecorator
+import com.projetdev.malo.musichall.api.ApiCall
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DiscCollectionFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [DiscCollectionFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class DiscCollectionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+
+
+    private val api: ApiCall = ApiCall(Constant.ADDRESS)
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewManager: LinearLayoutManager
+    private lateinit var adapter: AlbumAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -43,26 +37,38 @@ class DiscCollectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_disc_collection, container, false)
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        val rootView = inflater.inflate(R.layout.fragment_disc_collection, container, false)
+        recyclerView = rootView.findViewById(R.id.disc_collection_fragment_recyclerview)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = AlbumAdapter(api.getAlbumCollection(), activity)
+        recyclerView.apply {
+            setHasFixedSize(true)
+            addItemDecoration(MainRVDecorator(150))
+        }
+
+        return rootView
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerView.adapter = AlbumAdapter(api.getAlbumCollection(), activity)
     }
 
     /**
@@ -79,25 +85,5 @@ class DiscCollectionFragment : Fragment() {
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DiscCollectionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiscCollectionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

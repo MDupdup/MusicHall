@@ -59,6 +59,7 @@ class ArtistDetailActivity : AppCompatActivity() {
 
     fun addToFavorites(v: View) {
         api.insertArtist(artist)
+        findViewById<ImageView>(R.id.artist_add_favs).setImageResource(R.drawable.ic_star_white_36dp)
     }
 
     override fun onBackPressed() {

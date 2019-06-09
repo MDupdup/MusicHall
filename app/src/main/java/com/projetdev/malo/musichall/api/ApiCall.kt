@@ -504,6 +504,7 @@ class ApiCall(private val url: String) {
                     throw IOException("Unexpected response! Code $response")
                 } else {
                     try {
+                        Log.e("ERROR", response.body()!!.toString())
 
                         val json = JSONArray(response.body()!!.string())
                         for (i in 0 until json.length()) {
@@ -576,7 +577,6 @@ class ApiCall(private val url: String) {
     }
 
     private fun getTags(jsonTags: JSONArray): ArrayList<String> {
-
         val tags = arrayListOf<String>()
         for (i in 0 until jsonTags.length()) {
             val tag = jsonTags.getJSONObject(i)
