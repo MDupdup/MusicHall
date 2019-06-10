@@ -22,12 +22,20 @@
 
     <TextView
             android:id="@+id/artist_collection_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
 
             android:text="@string/search_textview_value"
             android:textSize="@dimen/search_title_size"
             android:textColor="@android:color/black"/>
+
+    <ImageView
+            android:id="@+id/artist_collection_delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+
+            android:src="@drawable/ic_trash_red_48dp"/>
 
 </LinearLayout>

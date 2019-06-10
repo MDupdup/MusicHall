@@ -2,31 +2,30 @@ package com.projetdev.malo.musichall.api
 
 import android.util.Log
 import com.google.gson.*
-import com.projetdev.malo.musichall.models.*
+import com.projetdev.malo.musichall.models.Album
+import com.projetdev.malo.musichall.models.Artist
+import com.projetdev.malo.musichall.models.Item
+import com.projetdev.malo.musichall.models.Track
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.io.IOException
 import java.lang.Integer.parseInt
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
-import okhttp3.RequestBody
-
-import com.google.gson.reflect.TypeToken
 
 
 class ApiCall(private val url: String) {
 
     @Throws(IOException::class)
-    fun getAlbum(id: String): Album? {
+    fun getAlbum(id: String, name: String? = ""): Album? {
         var album: Album? = null
 
         val req = Request.Builder()
             .header("Content-Type", "application/json")
-            .url(this.url + "/album/" + id)
+            .url(this.url + "/album/" + id + name)
             .build()
 
         val countDownLatch = CountDownLatch(1)
@@ -45,30 +44,34 @@ class ApiCall(private val url: String) {
                         val json = JSONObject(response.body()!!.string())
 
                         // Get full track list
-                        val trackList = ArrayList<Track>();
-                        val jsonTrackList = json.getJSONArray("Tracks")
-                        for (j in 0 until jsonTrackList.length()) {
-                            val jsonObject = jsonTrackList.getJSONObject(j)
+                        val trackList = ArrayList<Track>()
+                        if (json.has("Tags") && !json.isNull("Tags")) {
+                            val jsonTrackList = json.getJSONArray("Tracks")
+                            for (j in 0 until jsonTrackList.length()) {
+                                val jsonObject = jsonTrackList.getJSONObject(j)
 
-                            val position =
-                                if (jsonObject.getString("Position") == "") (j + 1).toString() else jsonObject.getString(
-                                    "Position"
+                                val position =
+                                    if (jsonObject.getString("Position") == "") (j + 1).toString() else jsonObject.getString(
+                                        "Position"
+                                    )
+                                trackList.add(
+                                    Track(
+                                        jsonObject.getString("Name"),
+                                        jsonObject.getString("Url"),
+                                        position,
+                                        parseInt(jsonObject.getString("Duration"))
+                                    )
                                 )
-                            trackList.add(
-                                Track(
-                                    jsonObject.getString("Name"),
-                                    jsonObject.getString("Url"),
-                                    position,
-                                    parseInt(jsonObject.getString("Duration"))
-                                )
-                            )
+                            }
                         }
 
                         val tags = ArrayList<String>()
-                        val jsonTags = json.getJSONArray("Tags")
-                        for (i in 0 until jsonTags.length()) {
-                            if (jsonTags.getString(i) in unwantedTags) continue
-                            tags.add(jsonTags.getString(i))
+                        if (json.has("Tags") && !json.isNull("Tags")) {
+                            val jsonTags = json.getJSONArray("Tags")
+                            for (i in 0 until jsonTags.length()) {
+                                if (jsonTags.getString(i) in unwantedTags) continue
+                                tags.add(jsonTags.getString(i))
+                            }
                         }
 
                         album = Album(
@@ -366,7 +369,7 @@ class ApiCall(private val url: String) {
             .url(this.url + "/favorites/add/album")
             .post(body)
             .build()
-        getClient()?.newCall(request)?.enqueue(object: Callback {
+        getClient()?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERROR", "Excuse me what the fuck", e)
             }
@@ -380,6 +383,7 @@ class ApiCall(private val url: String) {
 
     fun getArtistCollection(): ArrayList<Artist> {
         val artistCollection = ArrayList<Artist>()
+        var isEmpty = false
 
 
         val req = Request.Builder()
@@ -396,78 +400,78 @@ class ApiCall(private val url: String) {
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
+                if (!response.isSuccessful || response.body() == null) {
                     throw IOException("Unexpected response! Code $response")
                 } else {
                     try {
+                        if (response.body() != null || response.body()!!.string() != "null") {
+                            val json = JSONArray(response.body()!!.string())
+                            for (i in 0 until json.length()) {
 
-                        val json = JSONArray(response.body()!!.string())
-                        for (i in 0 until json.length()) {
+                                val obj = json.getJSONObject(i)
 
-                            val obj = json.getJSONObject(i)
+                                // Get similar artists
+                                val similarArtists = ArrayList<Artist>()
+                                val jsonSimilarArtists = obj.getJSONArray("Similar")
+                                for (i in 0 until jsonSimilarArtists.length()) {
+                                    val similarArtist = jsonSimilarArtists.getJSONObject(i)
 
-                            // Get similar artists
-                            val similarArtists = ArrayList<Artist>()
-                            val jsonSimilarArtists = obj.getJSONArray("Similar")
-                            for (i in 0 until jsonSimilarArtists.length()) {
-                                val similarArtist = jsonSimilarArtists.getJSONObject(i)
+                                    similarArtists.add(
+                                        Artist(
+                                            similarArtist.getString("Name"),
+                                            getImages(similarArtist.getJSONArray("Images"))
+                                        )
+                                    )
+                                }
 
-                                similarArtists.add(
+                                // Get albums
+                                val albums = ArrayList<Album>()
+                                val jsonAlbums = obj.getJSONArray("Albums")
+                                for (i in 0 until jsonSimilarArtists.length()) {
+                                    val album = jsonAlbums.getJSONObject(i)
+
+                                    albums.add(
+                                        Album(
+                                            album.getString("Name"),
+                                            album.getString("Mbid"),
+                                            album.getString("Url"),
+                                            getImages(album.getJSONArray("Images"))
+                                        )
+                                    )
+                                }
+
+                                for (i in 0 until jsonSimilarArtists.length()) {
+                                    val album = jsonAlbums.getJSONObject(i)
+
+                                    albums.add(
+                                        Album(
+                                            album.getString("Name"),
+                                            album.getString("Mbid"),
+                                            album.getString("Url"),
+                                            getImages(album.getJSONArray("Images"))
+                                        )
+                                    )
+                                }
+
+                                artistCollection.add(
                                     Artist(
-                                        similarArtist.getString("Name"),
-                                        getImages(similarArtist.getJSONArray("Images"))
+                                        obj.getString("Mbid"),
+                                        obj.getString("Name"),
+                                        obj.getString("Url"),
+                                        getImages(obj.getJSONArray("Images")),
+                                        obj.getString("PlayCount"),
+                                        obj.getBoolean("IsOnTour"),
+                                        similarArtists,
+                                        obj.getString("Summup"),
+                                        obj.getString("Content"),
+                                        albums,
+                                        null//getTags(json.getJSONArray("Tags"))
                                     )
                                 )
+
+                                countDownLatch.countDown()
                             }
-
-                            // Get albums
-                            val albums = ArrayList<Album>()
-                            val jsonAlbums = obj.getJSONArray("Albums")
-                            for (i in 0 until jsonSimilarArtists.length()) {
-                                val album = jsonAlbums.getJSONObject(i)
-
-                                albums.add(
-                                    Album(
-                                        album.getString("Name"),
-                                        album.getString("Mbid"),
-                                        album.getString("Url"),
-                                        getImages(album.getJSONArray("Images"))
-                                    )
-                                )
-                            }
-
-                            for (i in 0 until jsonSimilarArtists.length()) {
-                                val album = jsonAlbums.getJSONObject(i)
-
-                                albums.add(
-                                    Album(
-                                        album.getString("Name"),
-                                        album.getString("Mbid"),
-                                        album.getString("Url"),
-                                        getImages(album.getJSONArray("Images"))
-                                    )
-                                )
-                            }
-
-                            artistCollection.add(
-                                Artist(
-                                    obj.getString("Mbid"),
-                                    obj.getString("Name"),
-                                    obj.getString("Url"),
-                                    getImages(obj.getJSONArray("Images")),
-                                    obj.getString("PlayCount"),
-                                    obj.getBoolean("IsOnTour"),
-                                    similarArtists,
-                                    obj.getString("Summup"),
-                                    obj.getString("Content"),
-                                    albums,
-                                    null//getTags(json.getJSONArray("Tags"))
-                                )
-                            )
-
-                            countDownLatch.countDown()
                         }
-
                         countDownLatch.countDown()
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -512,46 +516,52 @@ class ApiCall(private val url: String) {
                             val obj = json.getJSONObject(i)
 
                             // Get full track list
-                            val trackList = ArrayList<Track>();
-                            val jsonTrackList = obj.getJSONArray("Tracks")
-                            for (j in 0 until jsonTrackList.length()) {
-                                val jsonObject = jsonTrackList.getJSONObject(j)
+                            val trackList = ArrayList<Track>()
 
-                                val position =
-                                    if (jsonObject.getString("Position") == "") (j + 1).toString() else jsonObject.getString(
-                                        "Position"
+                            if (obj.has("Tags") && !obj.isNull("Tags")) {
+                                val jsonTrackList = obj.getJSONArray("Tracks")
+                                for (j in 0 until jsonTrackList.length()) {
+                                    val jsonObject = jsonTrackList.getJSONObject(j)
+
+                                    val position =
+                                        if (jsonObject.getString("Position") == "") (j + 1).toString() else jsonObject.getString(
+                                            "Position"
+                                        )
+                                    trackList.add(
+                                        Track(
+                                            jsonObject.getString("Name"),
+                                            jsonObject.getString("Url"),
+                                            position,
+                                            parseInt(jsonObject.getString("Duration"))
+                                        )
                                     )
-                                trackList.add(
-                                    Track(
-                                        jsonObject.getString("Name"),
-                                        jsonObject.getString("Url"),
-                                        position,
-                                        parseInt(jsonObject.getString("Duration"))
-                                    )
-                                )
+                                }
                             }
 
                             val tags = ArrayList<String>()
-                            val jsonTags = obj.getJSONArray("Tags")
-                            for (i in 0 until jsonTags.length()) {
-                                if (jsonTags.getString(i) in unwantedTags) continue
-                                tags.add(jsonTags.getString(i))
-                            }
 
-                            albumCollection.add(
-                                Album(
-                                    obj.getString("Mbid"),
-                                    obj.getString("Name"),
-                                    obj.getString("Url"),
-                                    getYear(),
-                                    Artist(obj.getString("Artist")),
-                                    getImages(obj.getJSONArray("Images")),
-                                    trackList,
-                                    tags,
-                                    obj.getString("Summup"),
-                                    obj.getString("Content")
+                            if (obj.has("Tags") && !obj.isNull("Tags")) {
+                                val jsonTags = obj.getJSONArray("Tags")
+                                for (i in 0 until jsonTags.length()) {
+                                    if (jsonTags.getString(i) in unwantedTags) continue
+                                    tags.add(jsonTags.getString(i))
+                                }
+
+                                albumCollection.add(
+                                    Album(
+                                        obj.getString("Mbid"),
+                                        obj.getString("Name"),
+                                        obj.getString("Url"),
+                                        getYear(),
+                                        Artist(obj.getString("Artist")),
+                                        getImages(obj.getJSONArray("Images")),
+                                        trackList,
+                                        tags,
+                                        obj.getString("Summup"),
+                                        obj.getString("Content")
+                                    )
                                 )
-                            )
+                            }
                         }
 
                         countDownLatch.countDown()
@@ -565,6 +575,64 @@ class ApiCall(private val url: String) {
         countDownLatch.await()
         return albumCollection
     }
+
+    fun isInDB(name: String, type: String): Boolean {
+
+        var isItReallyInDB: Boolean = false
+
+        val req = Request.Builder()
+            .header("Content-Type", "text/html; charset=utf-8")
+            .url(this.url + "/favorites/isindb/$type/$name")
+            .build()
+
+        val countDownLatch = CountDownLatch(1)
+        getClient()?.newCall(req)?.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("ERR", "Excuse me what the fuck")
+                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    throw IOException("Unexpected response! Code $response")
+                } else {
+                    isItReallyInDB = response.body()?.string()!!.toBoolean()
+                    countDownLatch.countDown()
+                }
+            }
+        })
+        countDownLatch.await()
+
+        Log.i("Bool", isItReallyInDB.toString())
+        return isItReallyInDB
+    }
+
+    fun delete(name: String, type: String) {
+        val req = Request.Builder()
+            .header("Content-Type", "application/json")
+            .url(this.url + "/favorites/del/$type/$name")
+            .build()
+
+        getClient()?.newCall(req)?.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("ERR", "Excuse me what the fuck")
+                e.printStackTrace()
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    throw IOException("Unexpected response! Code $response")
+                } else {
+
+                    Log.i("OK", "Successfully deleted item.")
+                }
+            }
+        })
+
+    }
+
 
     private fun getImages(jsonImages: JSONArray): Map<String, String> {
         val imagesMap = mutableMapOf<String, String>()

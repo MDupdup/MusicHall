@@ -9,7 +9,7 @@
     <string name="search_textview_subtitle">This is a subtitle.</string>
     <string name="search_textview_yearfield">YYYY</string>
     <string name="search_textview_artistfield">Vroum</string>
-    
+
     <string-array name="dropdown_menu">
         <item>Artists</item>
         <item>Albums</item>

@@ -9,10 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.projetdev.malo.musichall.R
 import com.projetdev.malo.musichall.Utils.Constant
-import com.projetdev.malo.musichall.adapters.details.album.AlbumAdapter
 import com.projetdev.malo.musichall.adapters.details.artist.ArtistAdapter
 import com.projetdev.malo.musichall.adapters.main.MainRVDecorator
 import com.projetdev.malo.musichall.api.ApiCall
@@ -39,7 +37,7 @@ class ArtistCollectionFragment : Fragment() {
         //recyclerView.adapter = ArtistAdapter(api.getArtistCollection(), activity)
         recyclerView.apply {
             setHasFixedSize(true)
-            addItemDecoration(MainRVDecorator(150))
+            addItemDecoration(MainRVDecorator(0))
         }
 
         return rootView

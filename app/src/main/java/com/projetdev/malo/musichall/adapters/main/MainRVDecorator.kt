@@ -4,13 +4,14 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
-class MainRVDecorator(edgePadding: Int): RecyclerView.ItemDecoration() {
+class MainRVDecorator(edgePadding: Int) : RecyclerView.ItemDecoration() {
     private var edgePadding: Int = 0
 
 
     init {
         this.edgePadding = edgePadding
     }
+
     /**
      * EdgeDecorator
      * @param edgePadding padding set on the left side of the first item and the right side of the last item

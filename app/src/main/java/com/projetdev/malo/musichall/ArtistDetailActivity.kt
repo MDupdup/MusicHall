@@ -11,8 +11,7 @@ import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.models.Artist
 import com.squareup.picasso.Picasso
-import java.io.IOException
-import java.lang.Exception
+import kotlinx.android.synthetic.main.activity_detail_artist.*
 
 
 class ArtistDetailActivity : AppCompatActivity() {
@@ -20,6 +19,8 @@ class ArtistDetailActivity : AppCompatActivity() {
     val api: ApiCall = ApiCall(Constant.ADDRESS)
 
     lateinit var artist: Artist
+
+    lateinit var favButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +33,23 @@ class ArtistDetailActivity : AppCompatActivity() {
             artist = api.getArtist(data.getStringExtra("id"))!!
 
             Picasso.get()
-                .load(artist!!.images["large"])
+                .load(artist.images["large"])
                 .into(findViewById<ImageView>(R.id.cover_image))
 
+
             findViewById<TextView>(R.id.artist_detail_title).text = artist.name
-            findViewById<TextView>(R.id.artist_detail_desc).text  = artist.summup
+            findViewById<TextView>(R.id.artist_detail_desc).text = artist.summup
+
+            favButton = findViewById(R.id.artist_add_favs)
+            if (api.isInDB(artist.name, "artist")) {
+                favButton.setImageResource(R.drawable.ic_star_white_36dp)
+            }
+
+            if (artist.onTour) {
+                artist_detail_isontour.visibility = View.VISIBLE
+            } else {
+                artist_detail_isontour.visibility = View.GONE
+            }
 
             /*val tagsView = findViewById<LinearLayout>(R.id.artist_taglist)
 
@@ -58,8 +71,13 @@ class ArtistDetailActivity : AppCompatActivity() {
     }
 
     fun addToFavorites(v: View) {
-        api.insertArtist(artist)
-        findViewById<ImageView>(R.id.artist_add_favs).setImageResource(R.drawable.ic_star_white_36dp)
+        if (api.isInDB(artist.name, "artist")) {
+            favButton.setImageResource(R.drawable.ic_star_border_white_36dp)
+            api.delete(artist.name, "artist")
+        } else {
+            favButton.setImageResource(R.drawable.ic_star_white_36dp)
+            api.insertArtist(artist)
+        }
     }
 
     override fun onBackPressed() {

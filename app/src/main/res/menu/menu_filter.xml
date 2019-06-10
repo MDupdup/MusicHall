@@ -2,13 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/filter_both_option"
-            android:title="Both" />
+            android:title="Both"
+            android:icon="@drawable/ic_collection_black_24dp"/>
     <item
             android:id="@+id/filter_artist_only_option"
             android:title="Only Artists"
-            android:icon="@drawable/ic_group_black_512dp" />
+            android:icon="@drawable/ic_group_black_512dp"/>
     <item
             android:id="@+id/filter_album_only_option"
             android:title="Only Albums"
-            android:icon="@drawable/ic_music_note_black_512dp" />
+            android:icon="@drawable/ic_album_black_256dp"/>
 </menu>

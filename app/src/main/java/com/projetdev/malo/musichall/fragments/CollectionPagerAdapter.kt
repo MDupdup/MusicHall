@@ -1,4 +1,4 @@
-package com.projetdev.malo.musichall.adapters
+package com.projetdev.malo.musichall.fragments
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -10,7 +10,7 @@ import com.projetdev.malo.musichall.fragments.collection.DiscCollectionFragment
 class CollectionPagerAdapter(fragmentManager: FragmentManager?) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment? {
-        when(position) {
+        when (position) {
             0 -> return ArtistCollectionFragment()
             1 -> return DiscCollectionFragment()
         }
@@ -22,7 +22,7 @@ class CollectionPagerAdapter(fragmentManager: FragmentManager?) : FragmentStateP
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        when(position) {
+        when (position) {
             0 -> return "Artists"
             1 -> return "Discs"
         }

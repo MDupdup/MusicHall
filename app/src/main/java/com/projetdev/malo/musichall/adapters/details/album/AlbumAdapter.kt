@@ -1,33 +1,75 @@
 package com.projetdev.malo.musichall.adapters.details.album
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.projetdev.malo.musichall.Utils.Activitutils
+import com.projetdev.malo.musichall.AlbumDetailActivity
 import com.projetdev.malo.musichall.R
+import com.projetdev.malo.musichall.Utils.Activitutils
+import com.projetdev.malo.musichall.Utils.Constant
+import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.models.Album
 import com.squareup.picasso.Picasso
-
-import java.util.ArrayList
+import java.util.*
 
 class AlbumAdapter internal constructor(private var items: ArrayList<Album>, private var context: Context) :
     RecyclerView.Adapter<AlbumViewHolder>() {
 
+    private val api = ApiCall(Constant.ADDRESS)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
 
-        return AlbumViewHolder(LayoutInflater.from(context).inflate(R.layout.row_list_disc_collection_fragment, parent, false))
+        return AlbumViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.row_list_disc_collection_fragment,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         holder.title.text = items[position].name
         holder.imageView.setImageDrawable(Activitutils.loadImageFromWebOperations(items[position].images?.get("large")!!))
-
+        holder.row.setBackgroundColor(Color.parseColor("#ffffff"))
 
         Picasso.get()
             .load(items[position].images.get("large")!!)
             .placeholder(R.drawable.ic_image_black_512dp)
             .into(holder.imageView)
+
+        holder.trash.setOnClickListener {
+            val newList = items
+            newList.removeAt(position)
+            notifyItemRemoved(position)
+            refreshList(newList)
+            api.delete(items[position].name, "album")
+        }
+
+        holder.row.setOnClickListener {
+            holder.row.setBackgroundColor(Color.parseColor("#c5c5c5"))
+            val detail = AlbumDetailActivity::class.java
+            val intent = Intent(context, detail)
+
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                context as Activity,
+                holder.imageView,
+                "background_image"
+            )
+
+            if (items[position].id == "") {
+                intent.putExtra("id", items[position].name)
+                intent.putExtra("artist", items[position].artist.name)
+            } else
+                intent.putExtra("id", items[position].id)
+
+            context.startActivity(intent, options.toBundle())
+        }
     }
 
     override fun getItemCount(): Int {

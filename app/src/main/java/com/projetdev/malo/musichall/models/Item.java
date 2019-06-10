@@ -7,7 +7,7 @@ public abstract class Item {
     private String id;
     private String name;
     private String url;
-    private Map<String,String> images;
+    private Map<String, String> images;
     private int year;
     private Artist artist;
     private String playCount;
@@ -16,14 +16,14 @@ public abstract class Item {
         this.name = name;
     }
 
-    Item(String id, String name, String url, Map<String,String> images) {
+    Item(String id, String name, String url, Map<String, String> images) {
         this.id = id;
         this.name = name;
         this.url = url;
         this.images = images;
     }
 
-    Item(String id, String name, String url, Map<String,String> images, String playCount) {
+    Item(String id, String name, String url, Map<String, String> images, String playCount) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -31,7 +31,7 @@ public abstract class Item {
         this.playCount = playCount;
     }
 
-    Item(String id, String name, String url, Map<String,String> images, Integer year, Artist artist) {
+    Item(String id, String name, String url, Map<String, String> images, Integer year, Artist artist) {
         this.id = id;
         this.name = name;
         this.url = url;

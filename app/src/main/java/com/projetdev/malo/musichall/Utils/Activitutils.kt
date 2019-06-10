@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.projetdev.malo.musichall.R
 import java.io.InputStream
@@ -27,7 +26,7 @@ class Activitutils {
         fun createTag(context: Context, text: String): TextView {
             val tag = TextView(context)
             tag.background = context.getDrawable(R.drawable.style_tag)
-            tag.setPadding(4,4,4,4)
+            tag.setPadding(4, 4, 4, 4)
             tag.setTextColor(Color.WHITE)
             tag.text = text
 
@@ -35,7 +34,7 @@ class Activitutils {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            params.setMargins(5,0,0,0)
+            params.setMargins(5, 0, 0, 0)
 
             tag.layoutParams = params
 

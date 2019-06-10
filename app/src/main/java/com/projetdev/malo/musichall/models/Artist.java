@@ -19,7 +19,7 @@ public class Artist extends Item {
         super(name, new HashMap<>());
     }
 
-    public Artist(String name, Map<String,String> images) {
+    public Artist(String name, Map<String, String> images) {
         super(name, images);
     }
 

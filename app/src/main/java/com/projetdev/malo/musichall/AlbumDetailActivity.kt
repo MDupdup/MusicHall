@@ -9,14 +9,14 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.adapters.details.album.TrackAdapter
 import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.models.Album
 import com.squareup.picasso.Picasso
-import java.io.IOException
-import java.lang.Exception
 
 class AlbumDetailActivity : AppCompatActivity() {
 
@@ -27,6 +27,8 @@ class AlbumDetailActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private lateinit var favButton: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_album)
@@ -34,10 +36,15 @@ class AlbumDetailActivity : AppCompatActivity() {
         val data = intent
 
         try {
-            album = api.getAlbum(data.getStringExtra("id"))!!
+
+            album = if (data.extras.containsKey("artist")) api.getAlbum(
+                data.getStringExtra("id"),
+                "/" + data.getStringExtra("artist")
+            )!!
+            else api.getAlbum(data.getStringExtra("id"))!!
 
             Picasso.get()
-                .load(data.getStringExtra("large"))
+                .load(album.images["large"])
                 .into(findViewById<ImageView>(R.id.album_cover_image))
 
             findViewById<TextView>(R.id.artist_detail_title).text = album.name
@@ -51,6 +58,13 @@ class AlbumDetailActivity : AppCompatActivity() {
                     album.tracks,
                     this@AlbumDetailActivity
                 )
+            }
+
+            favButton = findViewById<ImageView>(R.id.album_add_favs)
+            val isInDB = api.isInDB(album.name, "album")
+            if (isInDB) {
+                Log.i("Bool", "It's $isInDB")
+                favButton.setImageResource(R.drawable.ic_star_white_36dp)
             }
 
             val tagsView: LinearLayout = findViewById(R.id.album_taglist)
@@ -74,9 +88,13 @@ class AlbumDetailActivity : AppCompatActivity() {
 
 
     fun addToFavorites(v: View) {
-        api.insertAlbum(album)
-        findViewById<ImageView>(R.id.album_add_favs).setImageResource(R.drawable.ic_star_white_36dp)
-
+        if (api.isInDB(album.name, "album")) {
+            favButton.setImageResource(R.drawable.ic_star_border_white_36dp)
+            api.delete(album.name, "album")
+        } else {
+            favButton.setImageResource(R.drawable.ic_star_white_36dp)
+            api.insertAlbum(album)
+        }
     }
 
     override fun onBackPressed() {

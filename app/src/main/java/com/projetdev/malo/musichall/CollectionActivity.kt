@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import com.projetdev.malo.musichall.adapters.CollectionPagerAdapter
+import com.projetdev.malo.musichall.fragments.CollectionPagerAdapter
 import com.projetdev.malo.musichall.fragments.collection.ArtistCollectionFragment
 import com.projetdev.malo.musichall.fragments.collection.DiscCollectionFragment
 
-class CollectionActivity: AppCompatActivity(), ArtistCollectionFragment.OnFragmentInteractionListener, DiscCollectionFragment.OnFragmentInteractionListener {
+class CollectionActivity : AppCompatActivity(), ArtistCollectionFragment.OnFragmentInteractionListener,
+    DiscCollectionFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
 
     }
@@ -19,6 +20,8 @@ class CollectionActivity: AppCompatActivity(), ArtistCollectionFragment.OnFragme
         setContentView(R.layout.activity_collection)
 
         val viewPager = findViewById<ViewPager>(R.id.pager)
+        viewPager.currentItem = intent?.extras!!.getInt("position")
+
         val pagerAdapter = CollectionPagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
 

@@ -44,7 +44,7 @@ class DiscCollectionFragment : Fragment() {
         recyclerView.adapter = AlbumAdapter(api.getAlbumCollection(), activity)
         recyclerView.apply {
             setHasFixedSize(true)
-            addItemDecoration(MainRVDecorator(150))
+            addItemDecoration(MainRVDecorator(0))
         }
 
         return rootView

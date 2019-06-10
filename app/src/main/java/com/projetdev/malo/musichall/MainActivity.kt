@@ -1,24 +1,23 @@
 package com.projetdev.malo.musichall
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
-import android.support.v7.widget.SearchView
 import android.widget.*
 import com.github.clans.fab.FloatingActionMenu
 import com.projetdev.malo.musichall.Utils.Animator.Companion.hideSearchBar
 import com.projetdev.malo.musichall.Utils.Animator.Companion.showSearchBar
 import com.projetdev.malo.musichall.Utils.Constant
 import com.projetdev.malo.musichall.adapters.main.MainAdapter
-import com.projetdev.malo.musichall.api.ApiCall
 import com.projetdev.malo.musichall.adapters.main.MainRVDecorator
+import com.projetdev.malo.musichall.api.ApiCall
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -39,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timer: TimerTask
 
     private var isSearchShown: Boolean = true
+    private lateinit var searchLoading: ProgressBar
 
     companion object {
         var searchMode: Int = Constant.BOTH
@@ -125,9 +125,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
         // Loading Progress Bar
-        val searchLoading: ProgressBar = findViewById(R.id.search_loading)
+        searchLoading = findViewById(R.id.search_loading)
         searchLoading.visibility = View.GONE
 
 
@@ -183,6 +182,14 @@ class MainActivity : AppCompatActivity() {
     fun getToCollection(view: View) {
         val intent = Intent(this, CollectionActivity::class.java)
 
+        searchLoading.visibility = View.VISIBLE
+
+        val choice = view.tag
+        var position = 0
+
+        if (choice == "album") position = 1
+
+        intent.putExtra("position", position)
         startActivity(intent)
     }
 }
